@@ -2,17 +2,17 @@ package ma.ac.ensa.ebankingapi.models;
 
 import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.UserRole;
+import ma.ac.ensa.ebankingapi.models.listeners.UserListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.Instant;
 import java.util.Collection;
 
 @Entity
+@EntityListeners({UserListener.class})
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,6 +46,7 @@ public class User extends AbstractEntity implements UserDetails {
     private Address address;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @Override
@@ -77,4 +78,5 @@ public class User extends AbstractEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

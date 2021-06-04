@@ -2,6 +2,7 @@ package ma.ac.ensa.ebankingapi.services.impl;
 
 import ma.ac.ensa.ebankingapi.dtos.AuthenticationDto;
 import ma.ac.ensa.ebankingapi.dtos.AuthenticationTokenDto;
+import ma.ac.ensa.ebankingapi.exception.InvalidCredentialsException;
 import ma.ac.ensa.ebankingapi.models.User;
 import ma.ac.ensa.ebankingapi.services.AuthenticationService;
 import ma.ac.ensa.ebankingapi.services.UserService;
@@ -12,6 +13,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+
+import javax.validation.Valid;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -33,9 +36,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationTokenDto authenticate(AuthenticationDto authenticationDto) {
-        // TODO: Validation here
-
         Authentication authResult = null;
+
         try {
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     authenticationDto.getUsername(),
@@ -45,8 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             authResult = authenticationManager.authenticate(authentication);
 
         } catch (BadCredentialsException e) {
-            // TODO: Throw 'email: [invalid credentials]' exception
-            throw new RuntimeException(e);
+            throw new InvalidCredentialsException();
         }
 
          final User user = (User) authResult.getPrincipal();

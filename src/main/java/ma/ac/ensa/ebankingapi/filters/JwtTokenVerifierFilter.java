@@ -2,16 +2,19 @@ package ma.ac.ensa.ebankingapi.filters;
 
 import com.google.common.base.Strings;
 import io.jsonwebtoken.JwtException;
+import ma.ac.ensa.ebankingapi.exception.InvalidCredentialsException;
+import ma.ac.ensa.ebankingapi.exception.InvalidJwtTokenException;
 import ma.ac.ensa.ebankingapi.models.User;
 import ma.ac.ensa.ebankingapi.repositories.UserRepository;
 import ma.ac.ensa.ebankingapi.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -26,11 +29,15 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
     private final UserRepository userRepository;
 
+    private final HandlerExceptionResolver resolver;
+
     @Autowired
     public JwtTokenVerifierFilter(JwtUtil jwtUtil,
-                                  UserRepository userRepository) {
+                                  UserRepository userRepository,
+                                  @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
         this.jwtUtil = jwtUtil;
         this.userRepository = userRepository;
+        this.resolver = resolver;
     }
 
     @Override
@@ -55,7 +62,7 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
             User user = userRepository.findById(userId).get();
 
             if (! jwtUtil.validateToken(token ,user)) {
-                throw new JwtException("");
+                throw new InvalidJwtTokenException();
             }
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -65,11 +72,10 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        } catch (JwtException e) {
-            throw new IllegalStateException(String.format("Token %s cannot be truest.", token));
-        } finally {
             filterChain.doFilter(request, response);
+
+        } catch (Exception e) {
+            resolver.resolveException(request, response, null, new InvalidJwtTokenException());
         }
     }
 }

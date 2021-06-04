@@ -7,12 +7,10 @@ import ma.ac.ensa.ebankingapi.models.User;
 import ma.ac.ensa.ebankingapi.repositories.UserRepository;
 import ma.ac.ensa.ebankingapi.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.datetime.standard.TemporalAccessorParser;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.Instant;
-import java.time.temporal.TemporalAccessor;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 @RestController
@@ -30,7 +28,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("login")
-    public AuthenticationTokenDto login(@RequestBody AuthenticationDto authenticationDto) {
+    public AuthenticationTokenDto login(@Valid @RequestBody AuthenticationDto authenticationDto) {
         return authenticationService.authenticate(authenticationDto);
     }
 
@@ -47,10 +45,5 @@ public class AuthenticationController {
                 .birthday(Instant.ofEpochMilli(new GregorianCalendar(1999, 12, 5).getTimeInMillis()))
                 .build();
         return userRepository.save(user);
-    }
-
-    @GetMapping("{id}")
-    public User user(@PathVariable("id") User user) {
-        return user;
     }
 }

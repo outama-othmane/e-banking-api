@@ -32,13 +32,13 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Instant birthday;
 
     @Column(nullable = false, unique = true)
     private String IDCard;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String phoneNumber;
 
     @Embedded

@@ -1,7 +1,6 @@
 package ma.ac.ensa.ebankingapi.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.*;
 import ma.ac.ensa.ebankingapi.models.Client;
@@ -11,7 +10,6 @@ import ma.ac.ensa.ebankingapi.models.Client;
 @Setter
 @Getter
 @Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClientDto {
 
     private Long id;

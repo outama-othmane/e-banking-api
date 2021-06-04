@@ -2,6 +2,7 @@ package ma.ac.ensa.ebankingapi.configurations.security;
 
 import ma.ac.ensa.ebankingapi.filters.JwtTokenVerifierFilter;
 import ma.ac.ensa.ebankingapi.services.UserService;
+import ma.ac.ensa.ebankingapi.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,9 +22,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    // TODO: @Config("")
-    private String rememberMeSecretKey = "remember-me-secret-key";
 
     private final PasswordEncoder passwordEncoder;
 
@@ -57,8 +55,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/auth").permitAll()
+                .antMatchers(HttpMethod.POST, Constants.APP_ROOT + "/auth/login").permitAll()
+                .antMatchers(HttpMethod.GET, Constants.APP_ROOT + "/auth").permitAll()
 
                 .and()
                 .addFilterBefore(jwtTokenVerifierFilter, UsernamePasswordAuthenticationFilter.class)
@@ -72,7 +70,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 

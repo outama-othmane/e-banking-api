@@ -5,6 +5,9 @@ import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.models.User;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.Instant;
 
 @AllArgsConstructor
@@ -14,12 +17,20 @@ import java.time.Instant;
 @Builder
 public class UserDto {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
+    @NotBlank
+    @Size(max = 200)
     private String firstName;
 
+    @NotBlank
+    @Size(max = 200)
     private String lastName;
 
+    @NotBlank
+    @Size(max = 200)
+    @Email
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -29,12 +40,15 @@ public class UserDto {
     private Instant birthday;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotBlank
+    @Size(max = 20)
     private String IDCard;
 
     private String phoneNumber;
 
     private AddressDto address;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private UserRole role;
 
     public static User toEntity(UserDto userDto) {

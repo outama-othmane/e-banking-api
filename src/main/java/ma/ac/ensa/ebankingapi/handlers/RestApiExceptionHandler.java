@@ -5,11 +5,13 @@ import com.google.common.collect.Sets;
 import ma.ac.ensa.ebankingapi.dtos.ErrorDto;
 import ma.ac.ensa.ebankingapi.exception.InvalidCredentialsException;
 import ma.ac.ensa.ebankingapi.exception.InvalidJwtTokenException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -18,7 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.Map;
 import java.util.Set;
 
-// @RestControllerAdvice
+@RestControllerAdvice
 public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     // TODO: Unauthenticated exception handler
@@ -56,11 +58,12 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDto, httpStatus);
     }
 
+    @NotNull
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
-                                                                  HttpHeaders headers,
-                                                                  HttpStatus status,
-                                                                  WebRequest request) {
+                                                                  @NotNull HttpHeaders headers,
+                                                                  @NotNull HttpStatus status,
+                                                                  @NotNull WebRequest request) {
        Map<String, Set<String>> errors = Maps.newHashMap();
 
         for(FieldError error : exception.getFieldErrors()) {
@@ -87,5 +90,13 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDto, httpStatus);
     }
 
-
+    @NotNull
+    @Override
+    protected ResponseEntity<Object> handleMissingPathVariable(@NotNull MissingPathVariableException ex,
+                                                               @NotNull HttpHeaders headers,
+                                                               @NotNull HttpStatus status,
+                                                               @NotNull WebRequest request) {
+        // TODO: Update this method
+        return super.handleMissingPathVariable(ex, headers, status, request);
+    }
 }

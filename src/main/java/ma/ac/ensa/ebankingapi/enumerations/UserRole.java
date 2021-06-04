@@ -11,6 +11,11 @@ public enum UserRole {
     AGENT,
     ADMIN;
 
+
+    public String getFullName() {
+        return "ROLE_" + this.name();
+    }
+
     public Set<GrantedAuthority> getGrantedAuthorities() {
         return Sets.newHashSet(
                 new SimpleGrantedAuthority("ROLE_" + this.name())

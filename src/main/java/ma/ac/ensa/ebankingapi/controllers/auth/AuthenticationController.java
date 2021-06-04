@@ -6,6 +6,7 @@ import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.models.User;
 import ma.ac.ensa.ebankingapi.repositories.UserRepository;
 import ma.ac.ensa.ebankingapi.services.AuthenticationService;
+import ma.ac.ensa.ebankingapi.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.Instant;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping(Constants.APP_ROOT + "/auth")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -55,7 +57,7 @@ public class AuthenticationController {
                 .phoneNumber("0639385987")
                 .IDCard("JK9090")
                 .role(UserRole.CLIENT)
-                .birthday(Instant.ofEpochMilli(new GregorianCalendar(1999, 12, 5).getTimeInMillis()))
+                .birthday(Instant.ofEpochMilli(new GregorianCalendar(1999, Calendar.DECEMBER, 5).getTimeInMillis()))
                 .build();
         return userRepository.save(user);
     }

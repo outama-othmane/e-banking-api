@@ -19,6 +19,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @Builder
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User extends AbstractEntity implements UserDetails {
 
     @Column(nullable = false)

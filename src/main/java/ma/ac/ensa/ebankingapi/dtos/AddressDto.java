@@ -3,6 +3,8 @@ package ma.ac.ensa.ebankingapi.dtos;
 import lombok.*;
 import ma.ac.ensa.ebankingapi.models.Address;
 
+import javax.validation.constraints.NotBlank;
+
 @Builder
 @Setter
 @Getter
@@ -10,14 +12,18 @@ import ma.ac.ensa.ebankingapi.models.Address;
 @AllArgsConstructor
 public class AddressDto {
 
+    @NotBlank
     private String address1;
 
     private String address2;
 
+    @NotBlank
     private String city;
 
+    @NotBlank
     private String ZIPCode;
 
+    @NotBlank
     private String country;
 
     public static Address toEntity(AddressDto addressDto) {

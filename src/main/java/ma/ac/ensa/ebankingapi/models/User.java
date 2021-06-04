@@ -3,7 +3,6 @@ package ma.ac.ensa.ebankingapi.models;
 import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.models.listeners.UserListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -19,7 +18,6 @@ import java.util.Collection;
 @Getter
 @Setter
 @Builder
-@Inheritance(strategy = InheritanceType.JOINED)
 public class User extends AbstractEntity implements UserDetails {
 
     @Column(nullable = false)
@@ -49,6 +47,12 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private Client client;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private Agent agent;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

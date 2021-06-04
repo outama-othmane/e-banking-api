@@ -1,12 +1,11 @@
 package ma.ac.ensa.ebankingapi.filters;
 
 import com.google.common.base.Strings;
-import io.jsonwebtoken.JwtException;
-import ma.ac.ensa.ebankingapi.exception.InvalidCredentialsException;
 import ma.ac.ensa.ebankingapi.exception.InvalidJwtTokenException;
 import ma.ac.ensa.ebankingapi.models.User;
 import ma.ac.ensa.ebankingapi.repositories.UserRepository;
 import ma.ac.ensa.ebankingapi.utils.JwtUtil;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -42,8 +41,8 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+                                    @NotNull HttpServletResponse response,
+                                    @NotNull FilterChain filterChain) throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
 
         if(Strings.isNullOrEmpty(authorizationHeader) || ! authorizationHeader.startsWith("Bearer ")) {
@@ -54,19 +53,20 @@ public class JwtTokenVerifierFilter extends OncePerRequestFilter {
         // The provided token
         String token = authorizationHeader.replace("Bearer ", "");
 
-        try {
+         try {
             // The token subject
             Long userId = Long.parseLong(jwtUtil.extractSubject(token));
 
             // Getting the user
-            User user = userRepository.findById(userId).get();
+            User user = userRepository.findById(userId)
+                    .orElseThrow(InvalidJwtTokenException::new);
 
             if (! jwtUtil.validateToken(token ,user)) {
                 throw new InvalidJwtTokenException();
             }
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(
-                    user.getUsername(),
+                    user,
                     null,
                     user.getAuthorities()
             );

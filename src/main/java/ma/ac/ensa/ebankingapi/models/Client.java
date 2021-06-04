@@ -11,7 +11,12 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Builder
-public class Client extends User {
+@ToString
+public class Client extends AbstractEntity {
+
+    @OneToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @ManyToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinColumn(name = "agent_id", nullable = false)

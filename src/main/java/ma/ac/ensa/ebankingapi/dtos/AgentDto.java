@@ -1,22 +1,24 @@
 package ma.ac.ensa.ebankingapi.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.*;
 import ma.ac.ensa.ebankingapi.models.Agent;
-import ma.ac.ensa.ebankingapi.models.Client;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 @Builder
-public class AgentDto extends UserDto {
-    
-    private AgencyDto agency;
+public class AgentDto  {
 
-    private List<ClientDto> clients;
+    private Long id;
+
+    @JsonUnwrapped
+    @JsonIgnoreProperties({"id"})
+    private UserDto user;
+
+    private AgencyDto agency;
     
     public static Agent toEntity(AgentDto agentDto) {
         if (agentDto == null) {
@@ -24,15 +26,13 @@ public class AgentDto extends UserDto {
             return null;
         }
 
-        List<Client> clients = agentDto.clients
-                .stream()
-                .map((clientDto) -> ClientDto.toEntity(clientDto))
-                .collect(Collectors.toList());
-
         Agent agent = Agent.builder()
+                .user(UserDto.toEntity(agentDto.getUser()))
                 .agency(AgencyDto.toEntity(agentDto.getAgency()))
-                .clients(clients)
                 .build();
+
+        agent.setId(agentDto.id);
+
         return agent;
     }
 
@@ -42,16 +42,10 @@ public class AgentDto extends UserDto {
             return null;
         }
 
-        List<ClientDto> clients = agent.getClients()
-                .stream()
-                .map((client) -> ClientDto.fromEntity(client))
-                .collect(Collectors.toList());
-
-        AgentDto agentDto = AgentDto.builder()
+        return AgentDto.builder()
+                .id(agent.getId())
+                .user(UserDto.fromEntity(agent.getUser()))
                 .agency(AgencyDto.fromEntity(agent.getAgency()))
-                .clients(clients)
                 .build();
-
-        return agentDto;
     }
 }

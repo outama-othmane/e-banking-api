@@ -1,5 +1,6 @@
 package ma.ac.ensa.ebankingapi.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.models.User;
@@ -21,10 +22,13 @@ public class UserDto {
 
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Instant birthday;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String IDCard;
 
     private String phoneNumber;
@@ -50,6 +54,7 @@ public class UserDto {
                 .address(AddressDto.toEntity(userDto.getAddress()))
                 .role(userDto.getRole())
                 .build();
+        user.setId(userDto.id);
         return user;
     }
 
@@ -59,7 +64,8 @@ public class UserDto {
             return null;
         }
 
-        UserDto userDto = UserDto.builder()
+        return UserDto.builder()
+                .id(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
@@ -70,7 +76,5 @@ public class UserDto {
                 .address(AddressDto.fromEntity(user.getAddress()))
                 .role(user.getRole())
                 .build();
-
-        return userDto;
     }
 }

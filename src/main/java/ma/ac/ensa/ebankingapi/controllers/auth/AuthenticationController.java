@@ -7,6 +7,8 @@ import ma.ac.ensa.ebankingapi.models.User;
 import ma.ac.ensa.ebankingapi.repositories.UserRepository;
 import ma.ac.ensa.ebankingapi.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,8 +34,19 @@ public class AuthenticationController {
         return authenticationService.authenticate(authenticationDto);
     }
 
+    @GetMapping("check")
+    public ResponseEntity<?> checkAuthentication() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("me")
+    public ResponseEntity<?> getCurrentUser() {
+        return authenticationService.getCurrentUser();
+    }
+
     @GetMapping
     public User user() {
+        // TODO: remove this method
         User user = User.builder()
                 .firstName("Othmane")
                 .lastName("OUTAMA")

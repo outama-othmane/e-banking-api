@@ -23,32 +23,19 @@ public class AgencyDto {
 
     private AddressDto address;
 
-    private List<AgentDto> agents;
-
-    private List<ClientDto> clients;
-
     public static Agency toEntity(AgencyDto agencyDto) {
         if (agencyDto == null) {
             // TODO: throw an exception
             return null;
         }
 
-        List<Agent> agents = agencyDto.agents
-                .stream()
-                .map((agent) -> AgentDto.toEntity(agent))
-                .collect(Collectors.toList());
-
-        List<Client> clients = agencyDto.clients
-                .stream()
-                .map((client) -> ClientDto.toEntity(client))
-                .collect(Collectors.toList());
-
         Agency agency = Agency.builder()
                 .title(agencyDto.title)
                 .address(AddressDto.toEntity(agencyDto.address))
-                .agents(agents)
-                .clients(clients)
                 .build();
+
+        agency.setId(agencyDto.id);
+
         return agency;
     }
 
@@ -58,21 +45,10 @@ public class AgencyDto {
             return null;
         }
 
-        List<AgentDto> agents = agency.getAgents()
-                .stream()
-                .map((agent) -> AgentDto.fromEntity(agent))
-                .collect(Collectors.toList());
-
-        List<ClientDto> clients = agency.getClients()
-                .stream()
-                .map((client) -> ClientDto.fromEntity(client))
-                .collect(Collectors.toList());
-
         AgencyDto agencyDto = AgencyDto.builder()
+                .id(agency.getId())
                 .title(agency.getTitle())
                 .address(AddressDto.fromEntity(agency.getAddress()))
-                .agents(agents)
-                .clients(clients)
                 .build();
 
         return agencyDto;

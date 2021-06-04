@@ -5,12 +5,10 @@ import com.google.common.collect.Sets;
 import ma.ac.ensa.ebankingapi.dtos.ErrorDto;
 import ma.ac.ensa.ebankingapi.exception.InvalidCredentialsException;
 import ma.ac.ensa.ebankingapi.exception.InvalidJwtTokenException;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,8 +20,6 @@ import java.util.Set;
 
 @RestControllerAdvice
 public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
-
-    private ObjectError error;
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<?> handleInvalidCredentialsException(InvalidCredentialsException exception,
@@ -59,7 +55,10 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception,
+                                                                  HttpHeaders headers,
+                                                                  HttpStatus status,
+                                                                  WebRequest request) {
        Map<String, Set<String>> errors = Maps.newHashMap();
 
         for(FieldError error : exception.getFieldErrors()) {
@@ -76,7 +75,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
             }
         }
 
-        final HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+        final HttpStatus httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
         final ErrorDto errorDto = ErrorDto.builder()
                 .httpStatusCode(httpStatus.value())
                 .message("The given data was invalid.")

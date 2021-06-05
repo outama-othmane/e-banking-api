@@ -21,8 +21,10 @@ public abstract class AbstractEntity implements Serializable {
     protected Long id;
 
     @CreationTimestamp
+    @Column(updatable = false)
     protected Instant createdAt;
 
     @LastModifiedDate
+    @Column(updatable = true)
     protected Instant updatedAt;
 }

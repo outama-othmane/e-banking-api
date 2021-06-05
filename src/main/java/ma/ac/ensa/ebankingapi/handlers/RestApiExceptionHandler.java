@@ -3,8 +3,11 @@ package ma.ac.ensa.ebankingapi.handlers;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import ma.ac.ensa.ebankingapi.dtos.ErrorDto;
+import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
 import ma.ac.ensa.ebankingapi.exception.InvalidCredentialsException;
+import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
 import ma.ac.ensa.ebankingapi.exception.InvalidJwtTokenException;
+import ma.ac.ensa.ebankingapi.exception.UnauthorizedException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -53,6 +56,37 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
         final ErrorDto errorDto = ErrorDto.builder()
                 .httpStatusCode(httpStatus.value())
                 .message("Unauthenticated.")
+                .build();
+
+        return new ResponseEntity<>(errorDto, httpStatus);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<?> handleUnauthorizedException(UnauthorizedException exception,
+                                                              WebRequest webRequest) {
+
+        //
+        final HttpStatus httpStatus = HttpStatus.FORBIDDEN;
+        final ErrorDto errorDto = ErrorDto.builder()
+                .httpStatusCode(httpStatus.value())
+                .message("Unauthorized.")
+                .build();
+
+        return new ResponseEntity<>(errorDto, httpStatus);
+    }
+
+    @ExceptionHandler(InvalidFieldException.class)
+    public ResponseEntity<?> handleUnauthorizedException(InvalidFieldException exception,
+                                                              WebRequest webRequest) {
+
+        Map<String, Set<String>> errors = Maps.newHashMap();
+        errors.put(exception.getFieldName(), Sets.newHashSet(exception.getError()));
+
+        final HttpStatus httpStatus = HttpStatus.UNPROCESSABLE_ENTITY;
+        final ErrorDto errorDto = ErrorDto.builder()
+                .httpStatusCode(httpStatus.value())
+                .errors(errors)
+                .message("The given data was invalid.")
                 .build();
 
         return new ResponseEntity<>(errorDto, httpStatus);

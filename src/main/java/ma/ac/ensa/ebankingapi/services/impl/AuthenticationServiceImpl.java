@@ -8,6 +8,7 @@ import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.exception.InvalidCredentialsException;
 import ma.ac.ensa.ebankingapi.models.User;
 import ma.ac.ensa.ebankingapi.services.AuthenticationService;
+import ma.ac.ensa.ebankingapi.utils.CurrentUser;
 import ma.ac.ensa.ebankingapi.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -60,23 +61,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public ResponseEntity<?> getCurrentUser() {
-        Object principal = SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
+        User user = CurrentUser.get();
 
-
-        if (principal instanceof User) {
-            User user = (User) principal;
-
+        if (user != null) {
             if (user.getRole().equals(UserRole.CLIENT)) {
                 return new ResponseEntity<>(
                         ClientDto.fromEntity(user.getClient()),
                         HttpStatus.OK
                 );
-            }
-
-            if (user.getRole().equals(UserRole.AGENT)) {
+            } else if (user.getRole().equals(UserRole.AGENT)) {
                 return new ResponseEntity<>(
                         AgentDto.fromEntity(user.getAgent()),
                         HttpStatus.OK

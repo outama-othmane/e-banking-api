@@ -1,4 +1,4 @@
-package ma.ac.ensa.ebankingapi.controllers.auth;
+package ma.ac.ensa.ebankingapi.controllers;
 
 import ma.ac.ensa.ebankingapi.dtos.AuthenticationDto;
 import ma.ac.ensa.ebankingapi.dtos.AuthenticationTokenDto;
@@ -46,9 +46,9 @@ public class AuthenticationController {
         return authenticationService.getCurrentUser();
     }
 
+    /*
     @GetMapping
     public User user() {
-        // TODO: remove this method
         User user = User.builder()
                 .firstName("Othmane")
                 .lastName("OUTAMA")
@@ -61,4 +61,5 @@ public class AuthenticationController {
                 .build();
         return userRepository.save(user);
     }
+     */
 }

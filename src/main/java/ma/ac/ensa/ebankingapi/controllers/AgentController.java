@@ -1,10 +1,10 @@
 package ma.ac.ensa.ebankingapi.controllers;
 
 import ma.ac.ensa.ebankingapi.authorizations.AgentAuthorization;
+import ma.ac.ensa.ebankingapi.dtos.ClientDto;
 import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
 import ma.ac.ensa.ebankingapi.dtos.UserDto;
 import ma.ac.ensa.ebankingapi.models.Agent;
-import ma.ac.ensa.ebankingapi.models.Client;
 import ma.ac.ensa.ebankingapi.services.AgentService;
 import ma.ac.ensa.ebankingapi.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class AgentController {
     }
 
     @GetMapping("{id}/clients")
-    public List<Client> getAgentClientsList(@PathVariable("id") Agent agent) {
+    public List<ClientDto> getAgentClientsList(@PathVariable("id") Agent agent) {
         authorization.viewSomeOfEntity(agent);
         return agentService.getAgentClientsList(agent);
     }

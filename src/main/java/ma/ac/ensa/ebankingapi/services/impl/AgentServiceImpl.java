@@ -1,7 +1,9 @@
 package ma.ac.ensa.ebankingapi.services.impl;
 
 import com.google.common.base.Strings;
+import io.jsonwebtoken.lang.Collections;
 import ma.ac.ensa.ebankingapi.dtos.AddressDto;
+import ma.ac.ensa.ebankingapi.dtos.ClientDto;
 import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
 import ma.ac.ensa.ebankingapi.dtos.UserDto;
 import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
@@ -18,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AgentServiceImpl implements AgentService {
@@ -43,8 +46,11 @@ public class AgentServiceImpl implements AgentService {
 
 
     @Override
-    public List<Client> getAgentClientsList(Agent agent) {
-        return clientRepository.findAllByAgent(agent);
+    public List<ClientDto> getAgentClientsList(Agent agent) {
+        return clientRepository.findAllByAgent(agent)
+                .stream()
+                .map((client) -> ClientDto.fromEntity(client))
+                .collect(Collectors.toList());
     }
 
     @Override

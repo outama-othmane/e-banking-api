@@ -69,8 +69,15 @@ public class ClientAuthorization extends Authorization<Client> {
     }
 
     @Override
-    public Boolean viewSomeOfEntity(Client entity) {
-        return false;
+    public Boolean viewSomeOfEntity(Client client) {
+        User currentUser = CurrentUser.get();
+        User clientUser = client.getUser();
+
+        if ( ! currentUser.getId().equals(clientUser.getId())) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override

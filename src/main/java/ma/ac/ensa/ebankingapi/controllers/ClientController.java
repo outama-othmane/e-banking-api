@@ -1,16 +1,18 @@
 package ma.ac.ensa.ebankingapi.controllers;
 
 import ma.ac.ensa.ebankingapi.authorizations.ClientAuthorization;
+import ma.ac.ensa.ebankingapi.dtos.AccountDto;
 import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
 import ma.ac.ensa.ebankingapi.dtos.UserDto;
+import ma.ac.ensa.ebankingapi.models.Account;
 import ma.ac.ensa.ebankingapi.models.Client;
 import ma.ac.ensa.ebankingapi.services.ClientService;
 import ma.ac.ensa.ebankingapi.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(Constants.APP_ROOT + "/clients")
@@ -48,8 +50,14 @@ public class ClientController {
 
     @RequestMapping(path = "{id}/password", method = { RequestMethod.POST, RequestMethod.PUT })
     public void changePassword(@PathVariable("id") Client client,
-                                       @Valid @RequestBody PasswordDto passwordDto) {
+                               @Valid @RequestBody PasswordDto passwordDto) {
         authorization.can("update", client);
         clientService.changePassword(client, passwordDto);
+    }
+
+    @GetMapping("{id}/accounts")
+    public List<AccountDto> getClientAccountsList(@PathVariable("id") Client client) {
+        authorization.can("viewSomeOfEntity", client);
+        return clientService.getClientAccountsList(client);
     }
 }

@@ -1,15 +1,14 @@
 package ma.ac.ensa.ebankingapi.services.impl;
 
 import com.google.common.base.Strings;
+import ma.ac.ensa.ebankingapi.dtos.AccountDto;
 import ma.ac.ensa.ebankingapi.dtos.AddressDto;
 import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
 import ma.ac.ensa.ebankingapi.dtos.UserDto;
 import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
-import ma.ac.ensa.ebankingapi.models.Address;
-import ma.ac.ensa.ebankingapi.models.Agent;
-import ma.ac.ensa.ebankingapi.models.Client;
-import ma.ac.ensa.ebankingapi.models.User;
+import ma.ac.ensa.ebankingapi.models.*;
+import ma.ac.ensa.ebankingapi.repositories.AccountRepository;
 import ma.ac.ensa.ebankingapi.repositories.ClientRepository;
 import ma.ac.ensa.ebankingapi.repositories.UserRepository;
 import ma.ac.ensa.ebankingapi.services.AuthenticationService;
@@ -19,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -27,17 +29,22 @@ public class ClientServiceImpl implements ClientService {
 
     private final ClientRepository clientRepository;
 
+    private final AccountRepository accountRepository;
+
     private final AuthenticationService authenticationService;
 
     private final PasswordEncoder passwordEncoder;
 
+
     @Autowired
     public ClientServiceImpl(UserRepository userRepository,
                              ClientRepository clientRepository,
+                             AccountRepository accountRepository,
                              AuthenticationService authenticationService,
                              PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.clientRepository = clientRepository;
+        this.accountRepository = accountRepository;
         this.authenticationService = authenticationService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -123,6 +130,14 @@ public class ClientServiceImpl implements ClientService {
         );
 
         userRepository.save(user);
+    }
+
+    @Override
+    public List<AccountDto> getClientAccountsList(Client client) {
+        return accountRepository.findAllByClient(client)
+                .stream()
+                .map(account -> AccountDto.fromEntity(account))
+                .collect(Collectors.toList());
     }
 
 }

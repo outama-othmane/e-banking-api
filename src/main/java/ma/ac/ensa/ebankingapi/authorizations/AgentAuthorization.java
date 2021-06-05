@@ -15,7 +15,10 @@ public class AgentAuthorization extends Authorization<Agent> {
 
     @Override
     public Boolean update(Agent agent) {
-        return viewSomeOfEntity(agent);
+        User currentUser = CurrentUser.get();
+        User wantedAgentUser = agent.getUser();
+
+        return wantedAgentUser.getId().equals(currentUser.getId());
     }
 
     @Override
@@ -35,13 +38,6 @@ public class AgentAuthorization extends Authorization<Agent> {
 
     @Override
     public Boolean viewSomeOfEntity(Agent agent) {
-        User currentUser = CurrentUser.get();
-        User wantedAgentUser = agent.getUser();
-
-        if (! wantedAgentUser.getId().equals(currentUser.getId())) {
-            return false;
-        }
-
-        return true;
+       return update(agent);
     }
 }

@@ -1,8 +1,11 @@
 package ma.ac.ensa.ebankingapi.dtos;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.AccountStatus;
 import ma.ac.ensa.ebankingapi.models.Account;
+
+import javax.validation.constraints.NotBlank;
 
 @Builder
 @Setter
@@ -13,12 +16,15 @@ public class AccountDto {
 
     private Long id;
 
+    @NotBlank
     private String title;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String number;
 
     private Double balance;
 
+    @NotBlank
     private AccountStatus status;
 
     public static Account toEntity(AccountDto accountDto) {
@@ -44,14 +50,12 @@ public class AccountDto {
             return null;
         }
 
-        AccountDto accountDto = AccountDto.builder()
+        return AccountDto.builder()
                 .id(account.getId())
                 .title(account.getTitle())
                 .number(account.getNumber())
                 .balance(account.getBalance())
                 .status(account.getStatus())
                 .build();
-
-        return accountDto;
     }
 }

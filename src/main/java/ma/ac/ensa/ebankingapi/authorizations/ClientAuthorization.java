@@ -18,11 +18,7 @@ public class ClientAuthorization extends Authorization<Client> {
             User clientAgentUser = client.getAgent().getUser();
 
             // Check if the agent of the requested client is the current agent
-            if (clientAgentUser.getId().equals(currentUser.getId())) {
-                return  true;
-            }
-
-            return false;
+            return clientAgentUser.getId().equals(currentUser.getId());
         }
 
         // Check if the current user is a client
@@ -30,11 +26,7 @@ public class ClientAuthorization extends Authorization<Client> {
             User clientUser = client.getUser();
 
             // Check if the requested client is the current client
-            if (clientUser.getId().equals(CurrentUser.get().getId())){
-                return true;
-            }
-
-            return false;
+            return clientUser.getId().equals(CurrentUser.get().getId());
         }
 
         return false;
@@ -51,11 +43,7 @@ public class ClientAuthorization extends Authorization<Client> {
 
         User clientAgentUser = client.getAgent().getUser();
         // Check if the agent of the requested client is the current agent
-        if (clientAgentUser.getId().equals(currentUser.getId())) {
-            return  true;
-        }
-
-        return false;
+        return clientAgentUser.getId().equals(currentUser.getId());
     }
 
     @Override
@@ -70,14 +58,7 @@ public class ClientAuthorization extends Authorization<Client> {
 
     @Override
     public Boolean viewSomeOfEntity(Client client) {
-        User currentUser = CurrentUser.get();
-        User clientUser = client.getUser();
-
-        if ( ! currentUser.getId().equals(clientUser.getId())) {
-            return false;
-        }
-
-        return true;
+        return update(client);
     }
 
     @Override
@@ -85,10 +66,6 @@ public class ClientAuthorization extends Authorization<Client> {
         User currentUser = CurrentUser.get();
 
         // Check if the current user is an agent
-        if ( ! currentUser.getRole().equals(UserRole.AGENT)) {
-            return false;
-        }
-
-        return true;
+        return currentUser.getRole().equals(UserRole.AGENT);
     }
 }

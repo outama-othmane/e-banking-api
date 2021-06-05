@@ -3,6 +3,7 @@ package ma.ac.ensa.ebankingapi.models;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "clients")
@@ -25,4 +26,7 @@ public class Client extends AbstractEntity {
     @ManyToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinColumn(name = "agency_id", nullable = false)
     private Agency agency;
+
+    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY, mappedBy = "client")
+    private List<Account> accounts;
 }

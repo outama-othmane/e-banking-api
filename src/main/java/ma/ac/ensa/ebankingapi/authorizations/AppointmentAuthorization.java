@@ -41,7 +41,7 @@ public class AppointmentAuthorization extends Authorization<Appointment> {
     }
 
     @Override
-    public Boolean viewSomeOfEntity(Appointment entity) {
+    public Boolean viewSomeOfEntity(Appointment appointment) {
         return false;
     }
 }

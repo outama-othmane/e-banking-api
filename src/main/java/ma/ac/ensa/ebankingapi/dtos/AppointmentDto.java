@@ -1,5 +1,6 @@
 package ma.ac.ensa.ebankingapi.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.AppointmentPacks;
 import ma.ac.ensa.ebankingapi.models.Appointment;
@@ -33,6 +34,9 @@ public class AppointmentDto {
     @NotNull
     private AppointmentPacks pack = AppointmentPacks.SHORT;
 
+    @JsonIgnoreProperties({"agent", "agency"})
+    private ClientDto client;
+
     public static Appointment toEntity(AppointmentDto appointmentDto) {
         if (appointmentDto == null) {
             // TODO: throw an exception
@@ -61,11 +65,12 @@ public class AppointmentDto {
                 .endTime(appointment.getEndTime())
                 .pack(null)
                 .date(appointment.getDate())
+                .client(ClientDto.fromEntity(appointment.getClient()))
                 .build();
     }
 
     public LocalTime getEndTime() {
-        if (endTime == null && startTime != null && pack != null)
+        if (startTime != null && pack != null)
             return startTime
                 .plusMinutes(pack.getDurationInMinutes());
 

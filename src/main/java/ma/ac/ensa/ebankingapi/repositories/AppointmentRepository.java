@@ -1,5 +1,6 @@
 package ma.ac.ensa.ebankingapi.repositories;
 
+import ma.ac.ensa.ebankingapi.models.Agent;
 import ma.ac.ensa.ebankingapi.models.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -7,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
@@ -15,9 +18,13 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
                 "FROM appointments apt " +
                 "WHERE apt.agent_id = ?1 AND " +
                 "apt.date=?2 AND " +
+                "(" +
                 "(apt.start_time BETWEEN ?3 AND ?4) or " +
                 "(apt.end_time BETWEEN ?3 AND ?4) or " +
-                "(apt.start_time <= ?3 AND apt.end_time > ?3) " +
+                "(apt.start_time <= ?3 AND apt.end_time > ?3)" +
+                ") " +
                 "LIMIT 1", nativeQuery = true)
-    Boolean existsByAgentIdAndDateAndStartTimeAndEndTime(Long agentId, LocalDate date, LocalTime startTime, LocalTime endTime);
+    Long existsByAgentIdAndDateAndStartTimeAndEndTime(Long agentId, LocalDate date, LocalTime startTime, LocalTime endTime);
+
+    List<Appointment> findAllByAgent(Agent agent);
 }

@@ -5,6 +5,7 @@ import ma.ac.ensa.ebankingapi.dtos.AppointmentDto;
 import ma.ac.ensa.ebankingapi.enumerations.AppointmentPacks;
 import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
 import ma.ac.ensa.ebankingapi.models.Agent;
+import ma.ac.ensa.ebankingapi.models.Appointment;
 import ma.ac.ensa.ebankingapi.models.Client;
 import ma.ac.ensa.ebankingapi.repositories.AppointmentRepository;
 import ma.ac.ensa.ebankingapi.services.AppointmentService;
@@ -41,6 +42,15 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public void createAppointment(AppointmentDto appointmentDto) {
         Client client = CurrentUser.get().getClient();
+        if (!checkingAvailability(client,appointmentDto)) {
+            throw new InvalidFieldException("date", "The given date and time are already booked.");
+        }
+
+        Appointment appointment = AppointmentDto.toEntity(appointmentDto);
+        appointment.setClient(client);
+        appointment.setAgent(client.getAgent());
+
+        appointmentRepository.save(appointment);
     }
 
     @Override
@@ -64,7 +74,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         // Check if the agent works on the given dates
         String dayOfWeek = appointmentDto.getDate()
                 .getDayOfWeek()
-                .getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+                .getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+                .toLowerCase();
         Map<String, LocalTime> workingTimeInDayOfWeek = AgentWorkingTime.get().get(dayOfWeek);
 
         try {
@@ -83,8 +94,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         Boolean isAgentFree = appointmentRepository.existsByAgentIdAndDateAndStartTimeAndEndTime(
                 clientAgent.getId(),
                 appointmentDto.getDate(),
-                appointmentDto.getStartTime(),
-                appointmentDto.getEndTime());
+                appointmentDto.getStartTime().plusMinutes(1),
+                appointmentDto.getEndTime()) == null;
 
         return isAgentFree;
     }

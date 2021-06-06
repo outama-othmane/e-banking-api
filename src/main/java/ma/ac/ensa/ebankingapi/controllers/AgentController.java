@@ -1,10 +1,12 @@
 package ma.ac.ensa.ebankingapi.controllers;
 
 import ma.ac.ensa.ebankingapi.authorizations.AgentAuthorization;
+import ma.ac.ensa.ebankingapi.dtos.AppointmentDto;
 import ma.ac.ensa.ebankingapi.dtos.ClientDto;
 import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
 import ma.ac.ensa.ebankingapi.dtos.UserDto;
 import ma.ac.ensa.ebankingapi.models.Agent;
+import ma.ac.ensa.ebankingapi.models.Appointment;
 import ma.ac.ensa.ebankingapi.services.AgentService;
 import ma.ac.ensa.ebankingapi.utils.AgentWorkingTime;
 import ma.ac.ensa.ebankingapi.utils.Constants;
@@ -54,5 +56,11 @@ public class AgentController {
     @GetMapping("{id}/working-time")
     public Map<String, Map<String, LocalTime>> agentWorkingTime(@PathVariable Long id) {
         return AgentWorkingTime.get();
+    }
+
+    @GetMapping("{id}/appointments")
+    public List<AppointmentDto> getAgentAppointmentsList(@PathVariable("id") Agent agent) {
+        authorization.viewSomeOfEntity(agent);
+        return agentService.getAgentAppointmentsList(agent);
     }
 }

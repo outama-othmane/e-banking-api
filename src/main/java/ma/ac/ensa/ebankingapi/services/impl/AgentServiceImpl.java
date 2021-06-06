@@ -1,17 +1,11 @@
 package ma.ac.ensa.ebankingapi.services.impl;
 
 import com.google.common.base.Strings;
-import io.jsonwebtoken.lang.Collections;
-import ma.ac.ensa.ebankingapi.dtos.AddressDto;
-import ma.ac.ensa.ebankingapi.dtos.ClientDto;
-import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
-import ma.ac.ensa.ebankingapi.dtos.UserDto;
+import ma.ac.ensa.ebankingapi.dtos.*;
 import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
-import ma.ac.ensa.ebankingapi.models.Address;
-import ma.ac.ensa.ebankingapi.models.Agent;
-import ma.ac.ensa.ebankingapi.models.Client;
-import ma.ac.ensa.ebankingapi.models.User;
+import ma.ac.ensa.ebankingapi.models.*;
 import ma.ac.ensa.ebankingapi.repositories.AgentRepository;
+import ma.ac.ensa.ebankingapi.repositories.AppointmentRepository;
 import ma.ac.ensa.ebankingapi.repositories.ClientRepository;
 import ma.ac.ensa.ebankingapi.repositories.UserRepository;
 import ma.ac.ensa.ebankingapi.services.AgentService;
@@ -29,6 +23,8 @@ public class AgentServiceImpl implements AgentService {
 
     private final ClientRepository clientRepository;
 
+    private final AppointmentRepository appointmentRepository;
+
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
@@ -36,10 +32,12 @@ public class AgentServiceImpl implements AgentService {
     @Autowired
     public AgentServiceImpl(AgentRepository agentRepository,
                             ClientRepository clientRepository,
+                            AppointmentRepository appointmentRepository,
                             UserRepository userRepository,
                             PasswordEncoder passwordEncoder) {
         this.agentRepository = agentRepository;
         this.clientRepository = clientRepository;
+        this.appointmentRepository = appointmentRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -49,7 +47,7 @@ public class AgentServiceImpl implements AgentService {
     public List<ClientDto> getAgentClientsList(Agent agent) {
         return clientRepository.findAllByAgent(agent)
                 .stream()
-                .map((client) -> ClientDto.fromEntity(client))
+                .map(ClientDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
@@ -91,5 +89,13 @@ public class AgentServiceImpl implements AgentService {
         );
 
         userRepository.save(user);
+    }
+
+    @Override
+    public List<AppointmentDto> getAgentAppointmentsList(Agent agent) {
+        return appointmentRepository.findAllByAgent(agent)
+                .stream()
+                .map(AppointmentDto::fromEntity)
+                .collect(Collectors.toList());
     }
 }

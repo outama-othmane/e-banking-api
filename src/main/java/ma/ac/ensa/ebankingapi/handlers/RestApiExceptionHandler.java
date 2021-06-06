@@ -23,7 +23,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.Map;
 import java.util.Set;
 
-// @RestControllerAdvice
+@RestControllerAdvice
 public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     // TODO: Unauthenticated exception handler

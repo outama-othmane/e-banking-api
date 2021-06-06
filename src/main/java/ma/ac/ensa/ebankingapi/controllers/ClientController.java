@@ -4,7 +4,6 @@ import ma.ac.ensa.ebankingapi.authorizations.ClientAuthorization;
 import ma.ac.ensa.ebankingapi.dtos.AccountDto;
 import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
 import ma.ac.ensa.ebankingapi.dtos.UserDto;
-import ma.ac.ensa.ebankingapi.models.Account;
 import ma.ac.ensa.ebankingapi.models.Client;
 import ma.ac.ensa.ebankingapi.services.ClientService;
 import ma.ac.ensa.ebankingapi.utils.Constants;

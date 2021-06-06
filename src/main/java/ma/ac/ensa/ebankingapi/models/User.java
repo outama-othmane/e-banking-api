@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Collection;
 
 @Entity
@@ -32,8 +33,8 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = true)
-    private Instant birthday;
+    @Column(nullable = true, columnDefinition = "DATE")
+    private LocalDate birthday;
 
     @Column(nullable = false, unique = true)
     private String IDCard;

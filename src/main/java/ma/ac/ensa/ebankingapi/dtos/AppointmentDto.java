@@ -1,9 +1,12 @@
 package ma.ac.ensa.ebankingapi.dtos;
 
 import lombok.*;
+import ma.ac.ensa.ebankingapi.enumerations.AppointmentPacks;
 import ma.ac.ensa.ebankingapi.models.Appointment;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -16,13 +19,19 @@ public class AppointmentDto {
 
     private Long id;
 
-    @NotBlank
+    @NotNull
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime startTime;
 
     private LocalTime endTime;
 
-    @NotBlank
+    @NotNull
+    @DateTimeFormat( pattern="yyyy-MM-dd")
+    @FutureOrPresent
     private LocalDate date;
+
+    @NotNull
+    private AppointmentPacks pack = AppointmentPacks.SHORT;
 
     public static Appointment toEntity(AppointmentDto appointmentDto) {
         if (appointmentDto == null) {
@@ -32,7 +41,7 @@ public class AppointmentDto {
 
         Appointment appointment = Appointment.builder()
                 .startTime(appointmentDto.startTime)
-                .endTime(appointmentDto.endTime)
+                .endTime(appointmentDto.getEndTime())
                 .date(appointmentDto.date)
                 .build();
         appointment.setId(appointmentDto.id);
@@ -50,7 +59,17 @@ public class AppointmentDto {
                 .id(appointment.getId())
                 .startTime(appointment.getStartTime())
                 .endTime(appointment.getEndTime())
+                .pack(null)
                 .date(appointment.getDate())
                 .build();
+    }
+
+    public LocalTime getEndTime() {
+        if (endTime == null && startTime != null && pack != null)
+            return startTime
+                .plusMinutes(pack.getDurationInMinutes());
+
+        else
+            return endTime;
     }
 }

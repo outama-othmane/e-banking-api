@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.models.User;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,7 +40,9 @@ public class UserDto {
     private String password;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Instant birthday;
+    @Past
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate birthday;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank

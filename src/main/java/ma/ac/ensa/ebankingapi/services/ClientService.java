@@ -17,4 +17,6 @@ public interface ClientService {
     void changePassword(Client client, PasswordDto passwordDto);
 
     List<AccountDto> getClientAccountsList(Client client);
+
+    void createAccount(Client client, AccountDto accountDto);
 }

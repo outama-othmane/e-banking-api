@@ -1,15 +1,11 @@
 package ma.ac.ensa.ebankingapi.utils;
 
-import io.jsonwebtoken.lang.Collections;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Random;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class AccountNumberGenerator implements IdentifierGenerator {
 
@@ -56,8 +52,7 @@ public class AccountNumberGenerator implements IdentifierGenerator {
 			atmCode[i] = String.valueOf(new Random().nextInt(10));
 		}
 
-		return Arrays.stream(atmCode)
-                .collect(Collectors.joining());
+		return String.join("", atmCode);
 	}
 
 	/**
@@ -87,7 +82,6 @@ public class AccountNumberGenerator implements IdentifierGenerator {
 			accountNumber[i] = String.valueOf(new Random().nextInt(10));
 		}
 
-		return Arrays.stream(accountNumber)
-                .collect(Collectors.joining());
+		return String.join("", accountNumber);
 	}
 }

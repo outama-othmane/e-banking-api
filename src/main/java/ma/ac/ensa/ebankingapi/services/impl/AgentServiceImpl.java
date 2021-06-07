@@ -93,7 +93,7 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public List<AppointmentDto> getAgentAppointmentsList(Agent agent) {
-        return appointmentRepository.findAllByAgent(agent)
+        return appointmentRepository.findAllFutureByAgent(agent)
                 .stream()
                 .map(AppointmentDto::fromEntity)
                 .collect(Collectors.toList());

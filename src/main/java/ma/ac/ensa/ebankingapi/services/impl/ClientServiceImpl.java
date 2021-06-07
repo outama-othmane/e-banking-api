@@ -7,10 +7,7 @@ import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
 import ma.ac.ensa.ebankingapi.dtos.UserDto;
 import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
-import ma.ac.ensa.ebankingapi.models.Address;
-import ma.ac.ensa.ebankingapi.models.Agent;
-import ma.ac.ensa.ebankingapi.models.Client;
-import ma.ac.ensa.ebankingapi.models.User;
+import ma.ac.ensa.ebankingapi.models.*;
 import ma.ac.ensa.ebankingapi.repositories.AccountRepository;
 import ma.ac.ensa.ebankingapi.repositories.ClientRepository;
 import ma.ac.ensa.ebankingapi.repositories.UserRepository;
@@ -136,6 +133,15 @@ public class ClientServiceImpl implements ClientService {
                 .stream()
                 .map(AccountDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void createAccount(Client client, AccountDto accountDto) {
+        System.out.println(client);
+        Account account = AccountDto.toEntity(accountDto);
+        account.setClient(client);
+
+        accountRepository.save(account);
     }
 
 }

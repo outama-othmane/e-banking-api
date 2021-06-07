@@ -2,6 +2,7 @@ package ma.ac.ensa.ebankingapi.models;
 
 import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.AccountStatus;
+import ma.ac.ensa.ebankingapi.utils.AccountNumberGenerator;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -16,8 +17,8 @@ import javax.persistence.*;
 public class Account extends AbstractEntity {
 
     @Column(nullable = false, unique = true, updatable = false)
-	@GeneratedValue(generator = "an-generator")
-	@GenericGenerator(name = "ac-generator", strategy = "ma.ac.ensa.ebankingapi.utils.AccountNumberGenerator")
+	@GeneratedValue(generator = "accountNumberGenerator")
+	@GenericGenerator(name = "accountNumberGenerator", strategy = "ma.ac.ensa.ebankingapi.utils.AccountNumberGenerator")
     private String number;
 
     private Double balance;
@@ -30,4 +31,9 @@ public class Account extends AbstractEntity {
     @ManyToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "client_id")
     private Client client;
+
+    @PrePersist
+    public void beforeCreatingAccount() {
+        number = AccountNumberGenerator.generateAccountNumber();
+    }
 }

@@ -5,7 +5,7 @@ import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.AccountStatus;
 import ma.ac.ensa.ebankingapi.models.Account;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
 
 @Builder
 @Setter
@@ -22,10 +22,10 @@ public class AccountDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String number;
 
-    private Double balance;
+    @PositiveOrZero
+    private Double balance = 0d;
 
-    @NotBlank
-    private AccountStatus status;
+    private AccountStatus status = AccountStatus.ACTIVE;
 
     public static Account toEntity(AccountDto accountDto) {
         if (accountDto == null) {
@@ -35,7 +35,6 @@ public class AccountDto {
 
         Account account = Account.builder()
                 .title(accountDto.title)
-                .number(accountDto.number)
                 .balance(accountDto.balance)
                 .status(accountDto.status)
                 .build();

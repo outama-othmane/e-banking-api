@@ -9,12 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
-        @Query(value = "SELECT apt.id " +
+    @Query(value = "SELECT apt.id " +
                 "FROM appointments apt " +
                 "WHERE apt.agent_id = ?1 AND " +
                 "apt.date=?2 AND " +
@@ -27,4 +26,19 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     Long existsByAgentIdAndDateAndStartTimeAndEndTime(Long agentId, LocalDate date, LocalTime startTime, LocalTime endTime);
 
     List<Appointment> findAllByAgent(Agent agent);
+
+    List<Appointment> findAllByAgentAndDate(Agent agent, LocalDate date);
+
+    List<Appointment> findAllByAgentAndDateGreaterThanEqual(Agent agent, LocalDate date);
+
+    default List<Appointment> findAllTodayByAgent(Agent agent) {
+        LocalDate date = LocalDate.now();
+        return findAllByAgentAndDate(agent, date);
+    }
+
+    default List<Appointment> findAllFutureByAgent(Agent agent) {
+        LocalDate date = LocalDate.now();
+        return findAllByAgentAndDateGreaterThanEqual(agent, date);
+    }
+
 }

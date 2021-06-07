@@ -1,5 +1,6 @@
 package ma.ac.ensa.ebankingapi.controllers;
 
+import ma.ac.ensa.ebankingapi.authorizations.AccountAuthorization;
 import ma.ac.ensa.ebankingapi.authorizations.ClientAuthorization;
 import ma.ac.ensa.ebankingapi.dtos.AccountDto;
 import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
@@ -21,11 +22,15 @@ public class ClientController {
 
     private final ClientAuthorization authorization;
 
+    private final AccountAuthorization accountAuthorization;
+
     @Autowired
     public ClientController(ClientService clientService,
-                            ClientAuthorization authorization) {
+                            ClientAuthorization authorization,
+                            AccountAuthorization accountAuthorization) {
         this.clientService = clientService;
         this.authorization = authorization;
+        this.accountAuthorization = accountAuthorization;
     }
 
     @PostMapping
@@ -58,5 +63,18 @@ public class ClientController {
     public List<AccountDto> getClientAccountsList(@PathVariable("id") Client client) {
         authorization.can("viewSomeOfEntity", client);
         return clientService.getClientAccountsList(client);
+    }
+
+    @PostMapping("{id}/accounts")
+    public void createAccount(@PathVariable("id") Client client,
+                              @Valid @RequestBody AccountDto accountDto) {
+        System.out.println(client);
+        // Check if the current user has the role to create the account
+        accountAuthorization.can("create");
+
+        // Check if the current user has the role to update the client
+        authorization.can("update", client);
+
+        clientService.createAccount(client, accountDto);
     }
 }

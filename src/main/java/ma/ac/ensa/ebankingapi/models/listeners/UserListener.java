@@ -1,5 +1,6 @@
 package ma.ac.ensa.ebankingapi.models.listeners;
 
+import lombok.NoArgsConstructor;
 import ma.ac.ensa.ebankingapi.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

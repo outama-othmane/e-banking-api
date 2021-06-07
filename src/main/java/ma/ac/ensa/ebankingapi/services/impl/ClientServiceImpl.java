@@ -1,25 +1,25 @@
 package ma.ac.ensa.ebankingapi.services.impl;
 
 import com.google.common.base.Strings;
-import ma.ac.ensa.ebankingapi.dtos.AccountDto;
-import ma.ac.ensa.ebankingapi.dtos.AddressDto;
-import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
-import ma.ac.ensa.ebankingapi.dtos.UserDto;
+import ma.ac.ensa.ebankingapi.dtos.*;
+import ma.ac.ensa.ebankingapi.enumerations.AccountStatus;
 import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
 import ma.ac.ensa.ebankingapi.models.*;
 import ma.ac.ensa.ebankingapi.repositories.AccountRepository;
 import ma.ac.ensa.ebankingapi.repositories.ClientRepository;
+import ma.ac.ensa.ebankingapi.repositories.MultipleTransferRepository;
 import ma.ac.ensa.ebankingapi.repositories.UserRepository;
 import ma.ac.ensa.ebankingapi.services.ClientService;
 import ma.ac.ensa.ebankingapi.utils.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -32,16 +32,20 @@ public class ClientServiceImpl implements ClientService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final MultipleTransferRepository multipleTransferRepository;
+
 
     @Autowired
     public ClientServiceImpl(UserRepository userRepository,
                              ClientRepository clientRepository,
                              AccountRepository accountRepository,
-                             PasswordEncoder passwordEncoder) {
+                             PasswordEncoder passwordEncoder,
+                             MultipleTransferRepository multipleTransferRepository) {
         this.userRepository = userRepository;
         this.clientRepository = clientRepository;
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
+        this.multipleTransferRepository = multipleTransferRepository;
     }
 
     @Override
@@ -136,12 +140,92 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public void createAccount(Client client, AccountDto accountDto) {
+    public void createAccount(Client client,
+                              AccountDto accountDto) {
         System.out.println(client);
         Account account = AccountDto.toEntity(accountDto);
         account.setClient(client);
 
         accountRepository.save(account);
+    }
+
+    @Override
+    public ResponseEntity<?> createMultipleTransferForClient(Client client,
+                                                             MultipleTransferDto multipleTransferDto) {
+        // Check if the fromAccountNumber belongs to the current client
+        if (! accountRepository.existsByClientAndNumber(client, multipleTransferDto.getAccountNumber())) {
+            throw new InvalidFieldException("accountNumber", "The account number doesn't belong to the client.");
+        }
+
+        // Assign the fromAccount to multipleTransferDto
+        Account fromAccount = accountRepository
+                .findFirstByNumber(multipleTransferDto.getAccountNumber())
+                .get();
+        multipleTransferDto.setFromAccount(AccountDto.fromEntity(fromAccount));
+
+        // Check if the account is active
+        if ( ! fromAccount.getStatus().equals(AccountStatus.ACTIVE)) {
+            throw new InvalidFieldException("accountNumber", "This account is not active.");
+        }
+
+        // Check if the amount exists
+        Double totalAmount = multipleTransferDto.getMultipleTransferRecipients()
+                .stream()
+                .map(m -> m.getAmount())
+                .reduce(0d, Double::sum);
+        multipleTransferDto.setTotalAmount(totalAmount);
+        if ( fromAccount.getBalance() < totalAmount) {
+            throw new InvalidFieldException("accountNumber", "Your balance is insufficient.");
+        }
+
+        // Check if all the recipients exist
+        List<Account> recipientAccounts = multipleTransferDto.getMultipleTransferRecipients()
+                .stream()
+                .map((recipient) -> {
+                    Account recipientAccount = accountRepository.findFirstByNumber(recipient.getAccountNumber())
+                            .orElseThrow(() -> new InvalidFieldException("accountNumber", "The given recipients are not all correct"));
+
+                    return recipientAccount;
+                }).collect(Collectors.toList());
+
+        // Assigning the number of recipients
+        Integer recipientsCount = multipleTransferDto.getMultipleTransferRecipients()
+                .size();
+        multipleTransferDto.setRecipientsCount(recipientsCount);
+
+        // Reducing the amount on the account
+        Double newBalance = fromAccount.getBalance() - totalAmount;
+        fromAccount.setBalance(newBalance);
+        fromAccount = accountRepository.save(fromAccount);
+
+        // Creating the multiple transfer
+        final MultipleTransfer multipleTransfer = MultipleTransferDto.toEntity(multipleTransferDto);
+        multipleTransfer.setMultipleTransferRecipients(null);
+        multipleTransferRepository.save(multipleTransfer);
+
+        List<MultipleTransferRecipient> multipleTransferRecipients = MultipleTransferDto.toEntity(multipleTransferDto)
+                .getMultipleTransferRecipients()
+                .stream()
+                .map(r -> {
+                    r.setMultipleTransfer(multipleTransfer);
+                    return r;
+                })
+                .collect(Collectors.toList());
+        multipleTransfer.setMultipleTransferRecipients(multipleTransferRecipients);
+
+        multipleTransferRepository.save(multipleTransfer);
+
+        // Update the balances of recipients
+        for (int i = 0; i < recipientAccounts.size(); i++) {
+            Account recipientAccount = recipientAccounts.get(i);
+            Double b = recipientAccount.getBalance() +
+                    multipleTransferDto.getMultipleTransferRecipients().get(i).getAmount();
+            recipientAccount.setBalance(b);
+        }
+
+        accountRepository.saveAll(recipientAccounts);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

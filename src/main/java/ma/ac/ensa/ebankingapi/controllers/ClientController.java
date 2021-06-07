@@ -3,12 +3,14 @@ package ma.ac.ensa.ebankingapi.controllers;
 import ma.ac.ensa.ebankingapi.authorizations.AccountAuthorization;
 import ma.ac.ensa.ebankingapi.authorizations.ClientAuthorization;
 import ma.ac.ensa.ebankingapi.dtos.AccountDto;
+import ma.ac.ensa.ebankingapi.dtos.MultipleTransferDto;
 import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
 import ma.ac.ensa.ebankingapi.dtos.UserDto;
 import ma.ac.ensa.ebankingapi.models.Client;
 import ma.ac.ensa.ebankingapi.services.ClientService;
 import ma.ac.ensa.ebankingapi.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -76,5 +78,14 @@ public class ClientController {
         authorization.can("update", client);
 
         clientService.createAccount(client, accountDto);
+    }
+
+    @PostMapping("{id}/multiple_transfers")
+    public ResponseEntity<?> createMultipleTransfer(@PathVariable("id") Client client,
+                                                   @Valid @RequestBody MultipleTransferDto multipleTransfer) {
+        // Check if the current user has the role to update the client
+        authorization.can("update", client);
+
+        return clientService.createMultipleTransferForClient(client, multipleTransfer);
     }
 }

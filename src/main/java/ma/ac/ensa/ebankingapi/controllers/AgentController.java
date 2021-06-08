@@ -1,12 +1,8 @@
 package ma.ac.ensa.ebankingapi.controllers;
 
 import ma.ac.ensa.ebankingapi.authorizations.AgentAuthorization;
-import ma.ac.ensa.ebankingapi.dtos.AppointmentDto;
-import ma.ac.ensa.ebankingapi.dtos.ClientDto;
-import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
-import ma.ac.ensa.ebankingapi.dtos.UserDto;
+import ma.ac.ensa.ebankingapi.dtos.*;
 import ma.ac.ensa.ebankingapi.models.Agent;
-import ma.ac.ensa.ebankingapi.models.Appointment;
 import ma.ac.ensa.ebankingapi.services.AgentService;
 import ma.ac.ensa.ebankingapi.utils.AgentWorkingTime;
 import ma.ac.ensa.ebankingapi.utils.Constants;
@@ -31,6 +27,12 @@ public class AgentController {
                            AgentAuthorization authorization) {
         this.agentService = agentService;
         this.authorization = authorization;
+    }
+
+    @GetMapping
+    public List<AgentDto> getAllAgentsList() {
+        authorization.can("viewAll");
+        return agentService.getAllAgentsList();
     }
 
     @PutMapping("{id}")

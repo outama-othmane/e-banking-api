@@ -5,7 +5,6 @@ import com.google.common.collect.Sets;
 import ma.ac.ensa.ebankingapi.dtos.ErrorDto;
 import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
 import ma.ac.ensa.ebankingapi.exception.InvalidCredentialsException;
-import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
 import ma.ac.ensa.ebankingapi.exception.InvalidJwtTokenException;
 import ma.ac.ensa.ebankingapi.exception.UnauthorizedException;
 import org.jetbrains.annotations.NotNull;
@@ -29,8 +28,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
     // TODO: Unauthenticated exception handler
 
     @ExceptionHandler(InvalidCredentialsException.class)
-    public ResponseEntity<?> handleInvalidCredentialsException(InvalidCredentialsException exception,
-                                                              WebRequest webRequest) {
+    public ResponseEntity<?> handleInvalidCredentialsException() {
 
         Set<String> usernameSet = Sets.newHashSet("Wrong username or password.");
 
@@ -48,8 +46,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(InvalidJwtTokenException.class)
-    public ResponseEntity<?> handleInvalidJwtTokenException(InvalidJwtTokenException exception,
-                                                              WebRequest webRequest) {
+    public ResponseEntity<?> handleInvalidJwtTokenException() {
 
         //
         final HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
@@ -62,8 +59,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<?> handleUnauthorizedException(UnauthorizedException exception,
-                                                              WebRequest webRequest) {
+    public ResponseEntity<?> handleUnauthorizedException() {
 
         //
         final HttpStatus httpStatus = HttpStatus.FORBIDDEN;
@@ -76,8 +72,7 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(InvalidFieldException.class)
-    public ResponseEntity<?> handleUnauthorizedException(InvalidFieldException exception,
-                                                              WebRequest webRequest) {
+    public ResponseEntity<?> handleInvalidFieldException(InvalidFieldException exception) {
 
         Map<String, Set<String>> errors = Maps.newHashMap();
         errors.put(exception.getFieldName(), Sets.newHashSet(exception.getError()));

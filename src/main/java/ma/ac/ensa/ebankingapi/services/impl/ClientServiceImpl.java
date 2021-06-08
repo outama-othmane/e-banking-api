@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -158,20 +159,24 @@ public class ClientServiceImpl implements ClientService {
         }
 
         // Assign the fromAccount to multipleTransferDto
-        Account fromAccount = accountRepository
-                .findFirstByNumber(multipleTransferDto.getAccountNumber())
-                .get();
+        Account fromAccount = null;
+        Optional<Account> fromAccountOptional = accountRepository
+                .findFirstByNumber(multipleTransferDto.getAccountNumber());
+        if (fromAccountOptional.isPresent()) {
+            fromAccount = fromAccountOptional.get();
+        }
         multipleTransferDto.setFromAccount(AccountDto.fromEntity(fromAccount));
 
         // Check if the account is active
-        if ( ! fromAccount.getStatus().equals(AccountStatus.ACTIVE)) {
+        assert fromAccount != null;
+        if ( !fromAccount.getStatus().equals(AccountStatus.ACTIVE)) {
             throw new InvalidFieldException("accountNumber", "This account is not active.");
         }
 
         // Check if the amount exists
         Double totalAmount = multipleTransferDto.getMultipleTransferRecipients()
                 .stream()
-                .map(m -> m.getAmount())
+                .map(MultipleTransferRecipientDto::getAmount)
                 .reduce(0d, Double::sum);
         multipleTransferDto.setTotalAmount(totalAmount);
         if ( fromAccount.getBalance() < totalAmount) {
@@ -182,10 +187,9 @@ public class ClientServiceImpl implements ClientService {
         List<Account> recipientAccounts = multipleTransferDto.getMultipleTransferRecipients()
                 .stream()
                 .map((recipient) -> {
-                    Account recipientAccount = accountRepository.findFirstByNumber(recipient.getAccountNumber())
+                    // Maybe check if the recipientAccount is ACTIVE TOO
+                    return accountRepository.findFirstByNumber(recipient.getAccountNumber())
                             .orElseThrow(() -> new InvalidFieldException("accountNumber", "The given recipients are not all correct"));
-
-                    return recipientAccount;
                 }).collect(Collectors.toList());
 
         // Assigning the number of recipients
@@ -196,7 +200,8 @@ public class ClientServiceImpl implements ClientService {
         // Reducing the amount on the account
         Double newBalance = fromAccount.getBalance() - totalAmount;
         fromAccount.setBalance(newBalance);
-        fromAccount = accountRepository.save(fromAccount);
+
+        accountRepository.save(fromAccount);
 
         // Creating the multiple transfer
         final MultipleTransfer multipleTransfer = MultipleTransferDto.toEntity(multipleTransferDto);
@@ -206,10 +211,7 @@ public class ClientServiceImpl implements ClientService {
         List<MultipleTransferRecipient> multipleTransferRecipients = MultipleTransferDto.toEntity(multipleTransferDto)
                 .getMultipleTransferRecipients()
                 .stream()
-                .map(r -> {
-                    r.setMultipleTransfer(multipleTransfer);
-                    return r;
-                })
+                .peek(r -> r.setMultipleTransfer(multipleTransfer))
                 .collect(Collectors.toList());
         multipleTransfer.setMultipleTransferRecipients(multipleTransferRecipients);
 
@@ -227,5 +229,4 @@ public class ClientServiceImpl implements ClientService {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 }

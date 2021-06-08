@@ -28,6 +28,9 @@ public class MultipleTransfer extends AbstractEntity {
 
     private LocalDateTime transferDate;
 
+    @Column(nullable = true)
+    private String reason;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "multipleTransfer")
     private List<MultipleTransferRecipient> multipleTransferRecipients;
 }

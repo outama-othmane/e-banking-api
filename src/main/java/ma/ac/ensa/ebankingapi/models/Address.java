@@ -13,18 +13,18 @@ import javax.persistence.Embeddable;
 @Builder
 public class Address {
 
-    @Column(nullable = true)
+    @Column
     private String address1;
 
-    @Column(nullable = true)
+    @Column
     private String address2;
 
-    @Column(nullable = true)
+    @Column
     private String city;
 
-    @Column(nullable = true)
+    @Column
     private String ZIPCode;
 
-    @Column(nullable = true)
+    @Column
     private String country;
 }

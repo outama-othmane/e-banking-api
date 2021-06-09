@@ -16,17 +16,20 @@ import java.util.List;
 public class Client extends AbstractEntity {
 
     @OneToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER, orphanRemoval = true)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    @JoinColumn(name = "agent_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "agent_id")
     private Agent agent;
 
-    @ManyToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
-    @JoinColumn(name = "agency_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "agency_id")
     private Agency agency;
 
     @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY, mappedBy = "client", orphanRemoval = true)
     private List<Account> accounts;
+
+    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY, mappedBy = "client", orphanRemoval = true)
+    private List<Appointment> appointments;
 }

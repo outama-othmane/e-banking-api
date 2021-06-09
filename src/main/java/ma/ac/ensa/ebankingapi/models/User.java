@@ -7,7 +7,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Collection;
 
@@ -33,13 +32,13 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = true, columnDefinition = "DATE")
+    @Column(columnDefinition = "DATE")
     private LocalDate birthday;
 
     @Column(nullable = false, unique = true)
     private String IDCard;
 
-    @Column(nullable = true)
+    @Column
     private String phoneNumber;
 
     @Embedded
@@ -49,11 +48,14 @@ public class User extends AbstractEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
     private Client client;
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
     private Agent agent;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    private Admin admin;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

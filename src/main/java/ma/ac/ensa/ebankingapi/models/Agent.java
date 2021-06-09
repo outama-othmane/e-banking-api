@@ -15,11 +15,11 @@ import java.util.List;
 public class Agent extends AbstractEntity {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE}, orphanRemoval = true)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE}, optional = true)
-    @JoinColumn(nullable = false, name = "agency_id")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "agency_id")
     private Agency agency;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "agent", cascade = {CascadeType.REMOVE}, orphanRemoval = true)

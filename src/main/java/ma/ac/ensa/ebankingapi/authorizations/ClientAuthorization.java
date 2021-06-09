@@ -60,8 +60,8 @@ public class ClientAuthorization extends Authorization<Client> {
     }
 
     @Override
-    public Boolean view(Client entity) {
-        return false;
+    public Boolean view(Client client) {
+        return update(client);
     }
 
     @Override

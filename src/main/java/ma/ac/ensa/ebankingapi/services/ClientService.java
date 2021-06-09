@@ -1,9 +1,6 @@
 package ma.ac.ensa.ebankingapi.services;
 
-import ma.ac.ensa.ebankingapi.dtos.AccountDto;
-import ma.ac.ensa.ebankingapi.dtos.MultipleTransferDto;
-import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
-import ma.ac.ensa.ebankingapi.dtos.UserDto;
+import ma.ac.ensa.ebankingapi.dtos.*;
 import ma.ac.ensa.ebankingapi.models.Client;
 import org.springframework.http.ResponseEntity;
 
@@ -23,4 +20,6 @@ public interface ClientService {
     void createAccount(Client client, AccountDto accountDto);
 
     ResponseEntity<?> createMultipleTransferForClient(Client client, MultipleTransferDto multipleTransfer);
+
+    ClientDto getClient(Client client);
 }

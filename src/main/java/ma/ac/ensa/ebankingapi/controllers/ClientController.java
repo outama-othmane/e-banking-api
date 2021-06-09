@@ -2,10 +2,7 @@ package ma.ac.ensa.ebankingapi.controllers;
 
 import ma.ac.ensa.ebankingapi.authorizations.AccountAuthorization;
 import ma.ac.ensa.ebankingapi.authorizations.ClientAuthorization;
-import ma.ac.ensa.ebankingapi.dtos.AccountDto;
-import ma.ac.ensa.ebankingapi.dtos.MultipleTransferDto;
-import ma.ac.ensa.ebankingapi.dtos.PasswordDto;
-import ma.ac.ensa.ebankingapi.dtos.UserDto;
+import ma.ac.ensa.ebankingapi.dtos.*;
 import ma.ac.ensa.ebankingapi.models.Client;
 import ma.ac.ensa.ebankingapi.services.ClientService;
 import ma.ac.ensa.ebankingapi.utils.Constants;
@@ -33,6 +30,12 @@ public class ClientController {
         this.clientService = clientService;
         this.authorization = authorization;
         this.accountAuthorization = accountAuthorization;
+    }
+
+    @GetMapping("{id}")
+    public ClientDto getClient(@PathVariable("id") Client client) {
+        authorization.can("view", client);
+        return clientService.getClient(client);
     }
 
     @PostMapping

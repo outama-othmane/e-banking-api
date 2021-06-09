@@ -19,7 +19,7 @@ public class MultipleTransferRecipient extends AbstractEntity {
     @Column(nullable = false)
     private String accountNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    @JoinColumn(name = "multiple_transfer_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "multiple_transfer_id")
     private MultipleTransfer multipleTransfer;
 }

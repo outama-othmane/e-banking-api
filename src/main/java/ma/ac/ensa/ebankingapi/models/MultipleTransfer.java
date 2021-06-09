@@ -3,7 +3,6 @@ package ma.ac.ensa.ebankingapi.models;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,8 +15,8 @@ import java.util.List;
 @Builder
 public class MultipleTransfer extends AbstractEntity {
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
-    @JoinColumn(name = "from_account_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "from_account_id")
     private Account fromAccount;
 
     @Column(nullable = false)
@@ -28,7 +27,7 @@ public class MultipleTransfer extends AbstractEntity {
 
     private LocalDateTime transferDate;
 
-    @Column(nullable = true)
+    @Column
     private String reason;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "multipleTransfer", orphanRemoval = true)

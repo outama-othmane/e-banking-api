@@ -227,4 +227,9 @@ public class ClientServiceImpl implements ClientService {
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @Override
+    public ClientDto getClient(Client client) {
+        return ClientDto.fromEntity(client);
+    }
 }

@@ -31,6 +31,6 @@ public class MultipleTransfer extends AbstractEntity {
     @Column(nullable = true)
     private String reason;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "multipleTransfer")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "multipleTransfer", orphanRemoval = true)
     private List<MultipleTransferRecipient> multipleTransferRecipients;
 }

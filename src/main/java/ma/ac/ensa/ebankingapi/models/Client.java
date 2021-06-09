@@ -15,7 +15,7 @@ import java.util.List;
 @ToString
 public class Client extends AbstractEntity {
 
-    @OneToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @OneToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -27,6 +27,6 @@ public class Client extends AbstractEntity {
     @JoinColumn(name = "agency_id", nullable = false)
     private Agency agency;
 
-    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY, mappedBy = "client")
+    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY, mappedBy = "client", orphanRemoval = true)
     private List<Account> accounts;
 }

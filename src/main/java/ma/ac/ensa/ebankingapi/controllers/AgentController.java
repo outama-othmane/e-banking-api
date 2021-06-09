@@ -42,6 +42,12 @@ public class AgentController {
         agentService.updateAgent(agent, userDto);
     }
 
+    @DeleteMapping("{id}")
+    public void deleteAgent(@PathVariable("id") Agent agent) {
+        authorization.can("delete", agent);
+        agentService.deleteAgent(agent);
+    }
+
     @RequestMapping(path = "{id}/password", method = { RequestMethod.POST, RequestMethod.PUT })
     public void changePassword(@PathVariable("id") Agent agent,
                                        @Valid @RequestBody PasswordDto passwordDto) {

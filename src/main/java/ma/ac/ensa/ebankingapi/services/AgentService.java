@@ -15,4 +15,6 @@ public interface AgentService {
     List<AppointmentDto> getAgentAppointmentsList(Agent agent);
 
     List<AgentDto> getAllAgentsList();
+
+    void deleteAgent(Agent agent);
 }

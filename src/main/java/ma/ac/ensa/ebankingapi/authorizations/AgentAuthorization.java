@@ -45,9 +45,4 @@ public class AgentAuthorization extends Authorization<Agent> {
     public Boolean viewSomeOfEntity(Agent agent) {
        return update(agent);
     }
-
-    private Boolean isAdmin() {
-        User currentUser = CurrentUser.get();
-        return currentUser.getRole().equals(UserRole.ADMIN);
-    }
 }

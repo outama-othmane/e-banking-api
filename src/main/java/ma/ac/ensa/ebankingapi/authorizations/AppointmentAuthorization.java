@@ -13,11 +13,7 @@ public class AppointmentAuthorization extends Authorization<Appointment> {
     public Boolean create() {
         User user = CurrentUser.get();
 
-        if ( ! user.getRole().equals(UserRole.CLIENT)) {
-            return false;
-        }
-
-        return true;
+        return user.getRole().equals(UserRole.CLIENT);
     }
 
     @Override

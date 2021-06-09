@@ -70,7 +70,6 @@ public class ClientController {
     @PostMapping("{id}/accounts")
     public void createAccount(@PathVariable("id") Client client,
                               @Valid @RequestBody AccountDto accountDto) {
-        System.out.println(client);
         // Check if the current user has the role to create the account
         accountAuthorization.can("create");
 

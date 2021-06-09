@@ -3,6 +3,7 @@ package ma.ac.ensa.ebankingapi.services.impl;
 import ma.ac.ensa.ebankingapi.dtos.MultipleTransferDto;
 import ma.ac.ensa.ebankingapi.models.Account;
 import ma.ac.ensa.ebankingapi.models.MultipleTransfer;
+import ma.ac.ensa.ebankingapi.repositories.AccountRepository;
 import ma.ac.ensa.ebankingapi.repositories.MultipleTransferRepository;
 import ma.ac.ensa.ebankingapi.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,14 @@ import java.util.stream.Collectors;
 @Service
 public class AccountServiceImpl implements AccountService {
 
+    private final AccountRepository accountRepository;
+
     private final MultipleTransferRepository multipleTransferRepository;
 
     @Autowired
-    public AccountServiceImpl(MultipleTransferRepository multipleTransferRepository) {
+    public AccountServiceImpl(AccountRepository accountRepository,
+                              MultipleTransferRepository multipleTransferRepository) {
+        this.accountRepository = accountRepository;
         this.multipleTransferRepository = multipleTransferRepository;
     }
 
@@ -30,5 +35,10 @@ public class AccountServiceImpl implements AccountService {
         return multipleTransfers.stream()
                 .map(MultipleTransferDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAccount(Account account) {
+        accountRepository.delete(account);
     }
 }

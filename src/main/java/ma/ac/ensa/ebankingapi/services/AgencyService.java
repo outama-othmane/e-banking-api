@@ -17,4 +17,6 @@ public interface AgencyService {
     void createAgent(Agency agency, UserDto userDto);
 
     List<AgentDto> agencyAgentsList(Agency agency);
+
+    void deleteAgency(Agency agency);
 }

@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Setter
 @Builder
 public class Admin extends AbstractEntity {
-    @OneToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER)
+    @OneToOne(cascade = {CascadeType.REMOVE}, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

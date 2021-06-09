@@ -13,6 +13,10 @@ public class ClientAuthorization extends Authorization<Client> {
     public Boolean update(Client client) {
         User currentUser = CurrentUser.get();
 
+        if (isAdmin()) {
+            return true;
+        }
+
         // Check if the current user is an agent
         if ( currentUser.getRole().equals(UserRole.AGENT)) {
             User clientAgentUser = client.getAgent().getUser();
@@ -35,6 +39,10 @@ public class ClientAuthorization extends Authorization<Client> {
     @Override
     public Boolean delete(Client client) {
         User currentUser = CurrentUser.get();
+
+        if (isAdmin()) {
+            return true;
+        }
 
         // Check if the current user is an agent
         if (!currentUser.getRole().equals(UserRole.AGENT)) {
@@ -66,6 +74,6 @@ public class ClientAuthorization extends Authorization<Client> {
         User currentUser = CurrentUser.get();
 
         // Check if the current user is an agent
-        return currentUser.getRole().equals(UserRole.AGENT);
+        return isAdmin() || currentUser.getRole().equals(UserRole.AGENT);
     }
 }

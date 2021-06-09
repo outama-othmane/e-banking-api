@@ -3,7 +3,6 @@ package ma.ac.ensa.ebankingapi.models;
 import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.AccountStatus;
 import ma.ac.ensa.ebankingapi.utils.AccountNumberGenerator;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -17,9 +16,7 @@ import javax.persistence.*;
 public class Account extends AbstractEntity {
 
     @Column(nullable = false, unique = true, updatable = false)
-	@GeneratedValue(generator = "accountNumberGenerator")
-	@GenericGenerator(name = "accountNumberGenerator", strategy = "ma.ac.ensa.ebankingapi.utils.AccountNumberGenerator")
-    private String number;
+	private String number;
 
     private Double balance;
 

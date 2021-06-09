@@ -75,16 +75,13 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void deleteClient(Client client) {
-        User user = client.getUser();
-
-        // TODO: Delete all the accounts
-        // TODO: Delete all the appointments
+        // User user = client.getUser();
 
         // Delete the client
         clientRepository.delete(client);
 
         // Delete the user
-        userRepository.delete(user);
+        // userRepository.delete(user);
 
     }
 
@@ -120,9 +117,10 @@ public class ClientServiceImpl implements ClientService {
     public void changePassword(Client client, PasswordDto passwordDto) {
         User user = client.getUser();
 
-        // TODO: This check is not required for the admin!
-        if ( ! passwordEncoder.matches(passwordDto.getCurrentPassword(), user.getPassword())) {
-            throw new InvalidFieldException("currentPassword", "The current password is incorrect.");
+        if (user.getRole().equals(UserRole.ADMIN)) {
+            if ( ! passwordEncoder.matches(passwordDto.getCurrentPassword(), user.getPassword())) {
+                throw new InvalidFieldException("currentPassword", "The current password is incorrect.");
+            }
         }
 
         user.setPassword(

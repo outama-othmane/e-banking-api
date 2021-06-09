@@ -6,10 +6,7 @@ import ma.ac.ensa.ebankingapi.models.Account;
 import ma.ac.ensa.ebankingapi.services.AccountService;
 import ma.ac.ensa.ebankingapi.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +23,13 @@ public class AccountController {
                              AccountService accountService) {
         this.authorization = authorization;
         this.accountService = accountService;
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteAccount(@PathVariable("id") Account account) {
+        authorization.can("delete", account);
+
+        accountService.deleteAccount(account);
     }
 
     @GetMapping("{id}/multiple_transfers")

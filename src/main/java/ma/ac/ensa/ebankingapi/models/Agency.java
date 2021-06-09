@@ -20,9 +20,9 @@ public class Agency extends AbstractEntity {
     @Embedded
     private Address address;
 
-    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY, mappedBy = "agency")
+    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY, mappedBy = "agency", orphanRemoval = true)
     private List<Agent> agents;
 
-    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY, mappedBy = "agency")
+    @OneToMany(cascade = {CascadeType.REMOVE}, fetch = FetchType.LAZY, mappedBy = "agency", orphanRemoval = true)
     private List<Client> clients;
 }

@@ -50,6 +50,13 @@ public class AgencyController {
         agencyService.updateAgency(agency, agencyDto);
     }
 
+    @DeleteMapping("{id}")
+    public void deleteAgency(@PathVariable("id") Agency agency) {
+        authorization.can("delete", agency);
+
+        agencyService.deleteAgency(agency);
+    }
+
     @GetMapping
     public List<AgencyDto> getAllAgencies() {
         authorization.can("viewAll");

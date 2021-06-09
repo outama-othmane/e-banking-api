@@ -2,6 +2,7 @@ package ma.ac.ensa.ebankingapi.services.impl;
 
 import com.google.common.base.Strings;
 import ma.ac.ensa.ebankingapi.dtos.*;
+import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
 import ma.ac.ensa.ebankingapi.models.*;
 import ma.ac.ensa.ebankingapi.repositories.AgentRepository;
@@ -79,9 +80,10 @@ public class AgentServiceImpl implements AgentService {
     public void changePassword(Agent agent, PasswordDto passwordDto) {
         User user = agent.getUser();
 
-        // TODO: This check is not required for the admin!
-        if ( ! passwordEncoder.matches(passwordDto.getCurrentPassword(), user.getPassword())) {
-            throw new InvalidFieldException("currentPassword", "The current password is incorrect.");
+        if (! user.getRole().equals(UserRole.ADMIN)) {
+            if ( ! passwordEncoder.matches(passwordDto.getCurrentPassword(), user.getPassword())) {
+                throw new InvalidFieldException("currentPassword", "The current password is incorrect.");
+            }
         }
 
         user.setPassword(
@@ -105,5 +107,10 @@ public class AgentServiceImpl implements AgentService {
                 .stream()
                 .map(AgentDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void deleteAgent(Agent agent) {
+        agentRepository.delete(agent);
     }
 }

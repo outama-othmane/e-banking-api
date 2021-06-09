@@ -1,6 +1,8 @@
 package ma.ac.ensa.ebankingapi.authorizations;
 
+import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.exception.UnauthorizedException;
+import ma.ac.ensa.ebankingapi.utils.CurrentUser;
 
 public abstract class Authorization<T> {
 
@@ -44,4 +46,7 @@ public abstract class Authorization<T> {
 
     public abstract Boolean viewSomeOfEntity(T entity);
 
+    protected Boolean isAdmin() {
+        return CurrentUser.get().getRole().equals(UserRole.ADMIN);
+    }
 }

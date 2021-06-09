@@ -86,4 +86,9 @@ public class AgencyServiceImpl implements AgencyService {
                 .map(AgentDto::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void deleteAgency(Agency agency) {
+        agencyRepository.delete(agency);
+    }
 }

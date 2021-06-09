@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return (UserDetails) userRepository
+        return userRepository
                 .findFirstByEmail(username)
                 .orElseThrow(
                         () -> new UsernameNotFoundException(String.format("Username %s not found.", username))

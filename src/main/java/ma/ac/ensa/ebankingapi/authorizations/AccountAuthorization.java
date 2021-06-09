@@ -20,11 +20,17 @@ public class AccountAuthorization extends Authorization<Account> {
     public Boolean update(Account account) {
         User user = CurrentUser.get();
 
-        // TODO : Check if the role is agent or admin then return true automatically.
+        // Check if the current user is admin
+        if (user.getRole().equals(UserRole.ADMIN)) {
+            return true;
+        }
 
-        if ( ! user.getRole().equals(UserRole.CLIENT)) {
-            return false;
-       }
+        // Check if the current user is agent
+        // And check if the account belongs to one of his clients
+        if (user.getRole().equals(UserRole.AGENT) &&
+                account.getClient().getAgent().equals(user.getAgent())) {
+            return true;
+        }
 
        // Get the current client
        Client client = user.getClient();
@@ -35,7 +41,7 @@ public class AccountAuthorization extends Authorization<Account> {
 
     @Override
     public Boolean delete(Account entity) {
-        return false;
+        return isAdmin();
     }
 
     @Override
@@ -44,12 +50,12 @@ public class AccountAuthorization extends Authorization<Account> {
     }
 
     @Override
-    public Boolean view(Account entity) {
+    public Boolean view(Account account) {
         return false;
     }
 
     @Override
-    public Boolean viewSomeOfEntity(Account entity) {
+    public Boolean viewSomeOfEntity(Account account) {
         return false;
     }
 }

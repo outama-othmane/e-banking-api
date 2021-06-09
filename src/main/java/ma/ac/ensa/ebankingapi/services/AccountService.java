@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface AccountService {
     List<MultipleTransferDto> getLast10ClientMultipleTransfer(Account account);
+
+    void deleteAccount(Account account);
 }

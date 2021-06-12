@@ -1,9 +1,6 @@
 package ma.ac.ensa.ebankingapi.services.impl;
 
-import ma.ac.ensa.ebankingapi.dtos.AgentDto;
-import ma.ac.ensa.ebankingapi.dtos.AuthenticationDto;
-import ma.ac.ensa.ebankingapi.dtos.AuthenticationTokenDto;
-import ma.ac.ensa.ebankingapi.dtos.ClientDto;
+import ma.ac.ensa.ebankingapi.dtos.*;
 import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.exception.InvalidCredentialsException;
 import ma.ac.ensa.ebankingapi.models.User;
@@ -71,6 +68,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             } else if (user.getRole().equals(UserRole.AGENT)) {
                 return new ResponseEntity<>(
                         AgentDto.fromEntity(user.getAgent()),
+                        HttpStatus.OK
+                );
+            } else if (user.getRole().equals(UserRole.ADMIN)) {
+                return new ResponseEntity<>(
+                        AdminDto.fromEntity(user.getAdmin()),
                         HttpStatus.OK
                 );
             }

@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin(allowCredentials = "true",  origins = "http://localhost:4200")
 @RestController
 @RequestMapping(Constants.APP_ROOT + "/agencies")
 public class AgencyController {

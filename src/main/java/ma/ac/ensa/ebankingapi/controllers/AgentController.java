@@ -14,6 +14,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(allowCredentials = "true",  origins = "http://localhost:4200")
 @RestController
 @RequestMapping(Constants.APP_ROOT + "/agents")
 public class AgentController {

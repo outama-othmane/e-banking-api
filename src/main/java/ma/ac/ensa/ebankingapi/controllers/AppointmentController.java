@@ -33,7 +33,7 @@ public class AppointmentController {
         return appointmentService.getAppointmentPacks();
     }
 
-     @PostMapping
+    @PostMapping
     public void createAppointment(@Valid @RequestBody AppointmentDto appointmentDto) {
         authorization.can("create");
         appointmentService.createAppointment(appointmentDto);

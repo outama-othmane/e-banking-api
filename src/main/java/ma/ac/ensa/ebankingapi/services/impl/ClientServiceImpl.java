@@ -117,7 +117,7 @@ public class ClientServiceImpl implements ClientService {
     public void changePassword(Client client, PasswordDto passwordDto) {
         User user = client.getUser();
 
-        if (user.getRole().equals(UserRole.ADMIN)) {
+        if (! user.getRole().equals(UserRole.ADMIN)) {
             if ( ! passwordEncoder.matches(passwordDto.getCurrentPassword(), user.getPassword())) {
                 throw new InvalidFieldException("currentPassword", "The current password is incorrect.");
             }

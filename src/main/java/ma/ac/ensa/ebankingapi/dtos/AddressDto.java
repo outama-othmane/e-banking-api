@@ -52,7 +52,7 @@ public class AddressDto {
         AddressDto addressDto = AddressDto.builder()
                 .address1(address.getAddress1())
                 .address2(address.getAddress2())
-                .city(address.getCountry())
+                .city(address.getCity())
                 .ZIPCode(address.getZIPCode())
                 .country(address.getCountry())
                 .build();

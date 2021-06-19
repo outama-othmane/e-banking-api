@@ -1,6 +1,7 @@
 package ma.ac.ensa.ebankingapi.services.impl;
 
 import ma.ac.ensa.ebankingapi.dtos.MultipleTransferDto;
+import ma.ac.ensa.ebankingapi.dtos.UpdateAccountStatusDto;
 import ma.ac.ensa.ebankingapi.models.Account;
 import ma.ac.ensa.ebankingapi.models.MultipleTransfer;
 import ma.ac.ensa.ebankingapi.repositories.AccountRepository;
@@ -40,5 +41,12 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteAccount(Account account) {
         accountRepository.delete(account);
+    }
+
+    @Override
+    public void updateAccountStatus(Account account,
+                                    UpdateAccountStatusDto updateAccountStatusDto) {
+        account.setStatus(updateAccountStatusDto.getStatus());
+        accountRepository.save(account);
     }
 }

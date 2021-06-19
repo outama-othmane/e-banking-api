@@ -1,13 +1,16 @@
 package ma.ac.ensa.ebankingapi.controllers;
 
 import ma.ac.ensa.ebankingapi.authorizations.AccountAuthorization;
+import ma.ac.ensa.ebankingapi.dtos.AccountDto;
 import ma.ac.ensa.ebankingapi.dtos.MultipleTransferDto;
+import ma.ac.ensa.ebankingapi.dtos.UpdateAccountStatusDto;
 import ma.ac.ensa.ebankingapi.models.Account;
 import ma.ac.ensa.ebankingapi.services.AccountService;
 import ma.ac.ensa.ebankingapi.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @CrossOrigin(allowCredentials = "true",  origins = "http://localhost:4200")
@@ -31,6 +34,14 @@ public class AccountController {
         authorization.can("delete", account);
 
         accountService.deleteAccount(account);
+    }
+
+    @RequestMapping(path = "{id}/status", method = { RequestMethod.POST, RequestMethod.PUT })
+    public void updateAccountStatus(@PathVariable("id") Account account,
+                                    @Valid @RequestBody UpdateAccountStatusDto updateAccountStatusDto) {
+        authorization.can("update", account);
+
+        accountService.updateAccountStatus(account, updateAccountStatusDto);
     }
 
     @GetMapping("{id}/multiple_transfers")

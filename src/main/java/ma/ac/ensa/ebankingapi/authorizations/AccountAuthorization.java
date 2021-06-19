@@ -27,9 +27,11 @@ public class AccountAuthorization extends Authorization<Account> {
 
         // Check if the current user is agent
         // And check if the account belongs to one of his clients
-        if (user.getRole().equals(UserRole.AGENT) &&
-                account.getClient().getAgent().equals(user.getAgent())) {
-            return true;
+        if (user.getRole().equals(UserRole.AGENT)) {
+            if (account.getClient().getAgent().equals(user.getAgent())) {
+                return true;
+            }
+            return false;
         }
 
        // Get the current client

@@ -4,6 +4,7 @@ import ma.ac.ensa.ebankingapi.dtos.AgencyDto;
 import ma.ac.ensa.ebankingapi.dtos.AgentDto;
 import ma.ac.ensa.ebankingapi.dtos.UserDto;
 import ma.ac.ensa.ebankingapi.enumerations.UserRole;
+import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
 import ma.ac.ensa.ebankingapi.models.Agency;
 import ma.ac.ensa.ebankingapi.models.Agent;
 import ma.ac.ensa.ebankingapi.models.User;
@@ -65,6 +66,16 @@ public class AgencyServiceImpl implements AgencyService {
 
     @Override
     public void createAgent(Agency agency, UserDto userDto) {
+        // Check if the email is already taken
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            throw new InvalidFieldException("email", "Email is already taken");
+        }
+
+        // Check if the idcard is already taken
+        if (userRepository.existsByIDCard(userDto.getIDCard())) {
+            throw new InvalidFieldException("idcard", "IDCard is already taken");
+        }
+
         // Creating the user
         User user = UserDto.toEntity(userDto);
         user.setRole(UserRole.AGENT);

@@ -10,6 +10,7 @@ import ma.ac.ensa.ebankingapi.repositories.AppointmentRepository;
 import ma.ac.ensa.ebankingapi.repositories.ClientRepository;
 import ma.ac.ensa.ebankingapi.repositories.UserRepository;
 import ma.ac.ensa.ebankingapi.services.AgentService;
+import ma.ac.ensa.ebankingapi.utils.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,22 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public void updateAgent(Agent agent, UserDto userDto) {
         User user = agent.getUser();
+
+
+        // Check if the current user is an admin
+        if (CurrentUser.get().getRole().equals(UserRole.ADMIN)) {
+            // Check if the idcard changed
+            if ( ! user.getIDCard().equals(userDto.getIDCard())) {
+                // Check if the idcard is unique
+                if (userRepository.existsByIDCard(userDto.getIDCard())) {
+                    throw new InvalidFieldException("idcard", "IDCard is already taken");
+                }
+            }
+            user.setIDCard(userDto.getIDCard());
+
+            user.setFirstName(userDto.getFirstName());
+            user.setLastName(userDto.getLastName());
+        }
 
         // Check if the email is already taken
         if ( ! user.getEmail().equals(userDto.getEmail())) {

@@ -57,7 +57,6 @@ public class AgentServiceImpl implements AgentService {
     public void updateAgent(Agent agent, UserDto userDto) {
         User user = agent.getUser();
 
-
         // Check if the current user is an admin
         if (CurrentUser.get().getRole().equals(UserRole.ADMIN)) {
             // Check if the idcard changed
@@ -97,7 +96,7 @@ public class AgentServiceImpl implements AgentService {
     public void changePassword(Agent agent, PasswordDto passwordDto) {
         User user = agent.getUser();
 
-        if (! user.getRole().equals(UserRole.ADMIN)) {
+        if (! CurrentUser.get().getRole().equals(UserRole.ADMIN)) {
             if ( ! passwordEncoder.matches(passwordDto.getCurrentPassword(), user.getPassword())) {
                 throw new InvalidFieldException("currentPassword", "The current password is incorrect.");
             }

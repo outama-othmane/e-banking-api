@@ -75,14 +75,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public void deleteClient(Client client) {
-        // User user = client.getUser();
-
         // Delete the client
+        // All the data related to this client will be delete as well thanks to cascade option.
         clientRepository.delete(client);
-
-        // Delete the user
-        // userRepository.delete(user);
-
     }
 
     @Override
@@ -117,7 +112,8 @@ public class ClientServiceImpl implements ClientService {
     public void changePassword(Client client, PasswordDto passwordDto) {
         User user = client.getUser();
 
-        if (! user.getRole().equals(UserRole.ADMIN)) {
+        if (! CurrentUser.get().getRole().equals(UserRole.ADMIN) &&
+                ! CurrentUser.get().getRole().equals(UserRole.AGENT)) {
             if ( ! passwordEncoder.matches(passwordDto.getCurrentPassword(), user.getPassword())) {
                 throw new InvalidFieldException("currentPassword", "The current password is incorrect.");
             }

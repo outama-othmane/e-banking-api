@@ -3,10 +3,7 @@ package ma.ac.ensa.ebankingapi.handlers;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import ma.ac.ensa.ebankingapi.dtos.ErrorDto;
-import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
-import ma.ac.ensa.ebankingapi.exception.InvalidCredentialsException;
-import ma.ac.ensa.ebankingapi.exception.InvalidJwtTokenException;
-import ma.ac.ensa.ebankingapi.exception.UnauthorizedException;
+import ma.ac.ensa.ebankingapi.exception.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,6 +14,7 @@ import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Map;
@@ -24,8 +22,6 @@ import java.util.Set;
 
 @RestControllerAdvice
 public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
-
-    // TODO: Unauthenticated exception handler
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<?> handleInvalidCredentialsException() {
@@ -125,7 +121,23 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
                                                                @NotNull HttpHeaders headers,
                                                                @NotNull HttpStatus status,
                                                                @NotNull WebRequest request) {
-        // TODO: Update this method
-        return super.handleMissingPathVariable(ex, headers, status, request);
+        final HttpStatus httpStatus = HttpStatus.NOT_FOUND;
+        final ErrorDto errorDto = ErrorDto.builder()
+                .httpStatusCode(httpStatus.value())
+                .message("Not Found.")
+                .build();
+
+        return new ResponseEntity<>(errorDto, httpStatus);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<?> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        final HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        final ErrorDto errorDto = ErrorDto.builder()
+                .httpStatusCode(httpStatus.value())
+                .message(String.format("The given [/%s] parameter is invalid.", ex.getName()))
+                .build();
+
+        return new ResponseEntity<>(errorDto, httpStatus);
     }
 }

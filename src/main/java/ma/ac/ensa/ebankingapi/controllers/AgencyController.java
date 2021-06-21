@@ -6,7 +6,6 @@ import ma.ac.ensa.ebankingapi.dtos.AgencyDto;
 import ma.ac.ensa.ebankingapi.dtos.AgentDto;
 import ma.ac.ensa.ebankingapi.dtos.UserDto;
 import ma.ac.ensa.ebankingapi.models.Agency;
-import ma.ac.ensa.ebankingapi.models.Agent;
 import ma.ac.ensa.ebankingapi.services.AgencyService;
 import ma.ac.ensa.ebankingapi.utils.Constants;
 import org.springframework.beans.factory.annotation.Autowired;

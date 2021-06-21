@@ -1,6 +1,5 @@
 package ma.ac.ensa.ebankingapi.configurations.security;
 
-import com.google.common.collect.ImmutableList;
 import ma.ac.ensa.ebankingapi.filters.JwtTokenVerifierFilter;
 import ma.ac.ensa.ebankingapi.services.UserService;
 import ma.ac.ensa.ebankingapi.utils.Constants;
@@ -18,9 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity

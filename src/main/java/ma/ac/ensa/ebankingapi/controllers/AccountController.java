@@ -1,7 +1,6 @@
 package ma.ac.ensa.ebankingapi.controllers;
 
 import ma.ac.ensa.ebankingapi.authorizations.AccountAuthorization;
-import ma.ac.ensa.ebankingapi.dtos.AccountDto;
 import ma.ac.ensa.ebankingapi.dtos.MultipleTransferDto;
 import ma.ac.ensa.ebankingapi.dtos.UpdateAccountStatusDto;
 import ma.ac.ensa.ebankingapi.models.Account;

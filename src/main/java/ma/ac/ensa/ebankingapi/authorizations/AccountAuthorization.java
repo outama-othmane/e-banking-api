@@ -42,8 +42,8 @@ public class AccountAuthorization extends Authorization<Account> {
     }
 
     @Override
-    public Boolean delete(Account entity) {
-        return isAdmin();
+    public Boolean delete(Account account) {
+        return update(account);
     }
 
     @Override

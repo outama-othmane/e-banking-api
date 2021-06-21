@@ -3,6 +3,8 @@ package ma.ac.ensa.ebankingapi.dtos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.AppointmentPacks;
+import ma.ac.ensa.ebankingapi.exception.ConvertDtoToEntityException;
+import ma.ac.ensa.ebankingapi.exception.ConvertEntityToDtoException;
 import ma.ac.ensa.ebankingapi.models.Appointment;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -39,8 +41,11 @@ public class AppointmentDto {
 
     public static Appointment toEntity(AppointmentDto appointmentDto) {
         if (appointmentDto == null) {
-            // TODO: throw an exception
-            return null;
+            throw new ConvertDtoToEntityException(
+                    String.format("Impossible to convert a null object of type %s to an entity.",
+                            AppointmentDto.class.getName()
+                    )
+            );
         }
 
         Appointment appointment = Appointment.builder()
@@ -55,8 +60,11 @@ public class AppointmentDto {
 
     public static AppointmentDto fromEntity(Appointment appointment) {
         if (appointment == null) {
-            // TODO: throw an exception
-            return null;
+            throw new ConvertEntityToDtoException(
+                    String.format("Impossible to convert a null object of type %s to a dto.",
+                            Appointment.class.getName()
+                    )
+            );
         }
 
         return AppointmentDto.builder()

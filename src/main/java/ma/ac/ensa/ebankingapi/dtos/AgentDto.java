@@ -3,6 +3,8 @@ package ma.ac.ensa.ebankingapi.dtos;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.*;
+import ma.ac.ensa.ebankingapi.exception.ConvertDtoToEntityException;
+import ma.ac.ensa.ebankingapi.exception.ConvertEntityToDtoException;
 import ma.ac.ensa.ebankingapi.models.Agent;
 
 @AllArgsConstructor
@@ -22,8 +24,11 @@ public class AgentDto  {
     
     public static Agent toEntity(AgentDto agentDto) {
         if (agentDto == null) {
-            // TODO: throw an exception
-            return null;
+            throw new ConvertDtoToEntityException(
+                    String.format("Impossible to convert a null object of type %s to an entity.",
+                            AgentDto.class.getName()
+                    )
+            );
         }
 
         Agent agent = Agent.builder()
@@ -38,8 +43,11 @@ public class AgentDto  {
 
     public static AgentDto fromEntity(Agent agent) {
         if (agent == null) {
-            // TODO: throw an exception
-            return null;
+            throw new ConvertEntityToDtoException(
+                    String.format("Impossible to convert a null object of type %s to a dto.",
+                            Agent.class.getName()
+                    )
+            );
         }
 
         return AgentDto.builder()

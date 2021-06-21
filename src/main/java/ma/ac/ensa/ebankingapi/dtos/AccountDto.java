@@ -3,6 +3,8 @@ package ma.ac.ensa.ebankingapi.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.AccountStatus;
+import ma.ac.ensa.ebankingapi.exception.ConvertDtoToEntityException;
+import ma.ac.ensa.ebankingapi.exception.ConvertEntityToDtoException;
 import ma.ac.ensa.ebankingapi.models.Account;
 
 import javax.validation.constraints.*;
@@ -29,8 +31,11 @@ public class AccountDto {
 
     public static Account toEntity(AccountDto accountDto) {
         if (accountDto == null) {
-            // TODO: throw an exception
-            return null;
+            throw new ConvertDtoToEntityException(
+                    String.format("Impossible to convert a null object of type %s to an entity.",
+                            AccountDto.class.getName()
+                    )
+            );
         }
 
         Account account = Account.builder()
@@ -45,8 +50,11 @@ public class AccountDto {
 
     public static AccountDto fromEntity(Account account) {
         if (account == null) {
-            // TODO: throw an exception
-            return null;
+            throw new ConvertEntityToDtoException(
+                    String.format("Impossible to convert a null object of type %s to a dto.",
+                            Account.class.getName()
+                    )
+            );
         }
 
         return AccountDto.builder()

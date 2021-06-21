@@ -3,6 +3,8 @@ package ma.ac.ensa.ebankingapi.dtos;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import ma.ac.ensa.ebankingapi.enumerations.UserRole;
+import ma.ac.ensa.ebankingapi.exception.ConvertDtoToEntityException;
+import ma.ac.ensa.ebankingapi.exception.ConvertEntityToDtoException;
 import ma.ac.ensa.ebankingapi.models.User;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -43,7 +45,6 @@ public class UserDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
 
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank
     @Size(max = 20)
     private String IDCard;
@@ -57,8 +58,11 @@ public class UserDto {
 
     public static User toEntity(UserDto userDto) {
         if (userDto == null) {
-            // TODO: throw an exception
-            return null;
+            throw new ConvertDtoToEntityException(
+                    String.format("Impossible to convert a null object of type %s to an entity.",
+                            UserDto.class.getName()
+                    )
+            );
         }
 
         User user = User.builder()
@@ -78,8 +82,11 @@ public class UserDto {
 
     public static UserDto fromEntity(User user) {
         if (user == null) {
-            // TODO: throw an exception
-            return null;
+            throw new ConvertEntityToDtoException(
+                    String.format("Impossible to convert a null object of type %s to a dto.",
+                            User.class.getName()
+                    )
+            );
         }
 
         return UserDto.builder()

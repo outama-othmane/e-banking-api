@@ -1,13 +1,11 @@
 package ma.ac.ensa.ebankingapi.dtos;
 
 import lombok.*;
+import ma.ac.ensa.ebankingapi.exception.ConvertDtoToEntityException;
+import ma.ac.ensa.ebankingapi.exception.ConvertEntityToDtoException;
 import ma.ac.ensa.ebankingapi.models.Agency;
-import ma.ac.ensa.ebankingapi.models.Agent;
-import ma.ac.ensa.ebankingapi.models.Client;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,8 +23,11 @@ public class AgencyDto {
 
     public static Agency toEntity(AgencyDto agencyDto) {
         if (agencyDto == null) {
-            // TODO: throw an exception
-            return null;
+            throw new ConvertDtoToEntityException(
+                    String.format("Impossible to convert a null object of type %s to an entity.",
+                            AgencyDto.class.getName()
+                    )
+            );
         }
 
         Agency agency = Agency.builder()
@@ -41,8 +42,11 @@ public class AgencyDto {
 
     public static AgencyDto fromEntity(Agency agency) {
         if (agency == null) {
-            // TODO: throw an exception
-            return null;
+            throw new ConvertEntityToDtoException(
+                    String.format("Impossible to convert a null object of type %s to a dto.",
+                            Agency.class.getName()
+                    )
+            );
         }
 
         AgencyDto agencyDto = AgencyDto.builder()

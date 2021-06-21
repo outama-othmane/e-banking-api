@@ -28,7 +28,6 @@ public class AddressDto {
 
     public static Address toEntity(AddressDto addressDto) {
         if (addressDto == null) {
-            // TODO: throw an exception
             return null;
         }
 
@@ -45,7 +44,6 @@ public class AddressDto {
 
     public static AddressDto fromEntity(Address address) {
         if (address == null) {
-            // TODO: throw an exception
             return null;
         }
 

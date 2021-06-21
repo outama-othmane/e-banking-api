@@ -1,6 +1,8 @@
 package ma.ac.ensa.ebankingapi.dtos;
 
 import lombok.*;
+import ma.ac.ensa.ebankingapi.exception.ConvertDtoToEntityException;
+import ma.ac.ensa.ebankingapi.exception.ConvertEntityToDtoException;
 import ma.ac.ensa.ebankingapi.models.MultipleTransferRecipient;
 
 import javax.validation.constraints.NotBlank;
@@ -25,8 +27,11 @@ public class MultipleTransferRecipientDto {
 
     public static MultipleTransferRecipient toEntity(MultipleTransferRecipientDto multipleTransferRecipientDto) {
         if (multipleTransferRecipientDto == null) {
-            // TODO: throw an exception
-            return null;
+            throw new ConvertDtoToEntityException(
+                    String.format("Impossible to convert a null object of type %s to an entity.",
+                            MultipleTransferRecipientDto.class.getName()
+                    )
+            );
         }
 
         MultipleTransferRecipient multipleTransferRecipient = MultipleTransferRecipient.builder()
@@ -41,8 +46,11 @@ public class MultipleTransferRecipientDto {
 
     public static MultipleTransferRecipientDto fromEntity(MultipleTransferRecipient multipleTransferRecipient) {
         if (multipleTransferRecipient == null) {
-            // TODO: throw an exception
-            return null;
+            throw new ConvertEntityToDtoException(
+                    String.format("Impossible to convert a null object of type %s to a dto.",
+                            MultipleTransferRecipient.class.getName()
+                    )
+            );
         }
 
         return MultipleTransferRecipientDto.builder()

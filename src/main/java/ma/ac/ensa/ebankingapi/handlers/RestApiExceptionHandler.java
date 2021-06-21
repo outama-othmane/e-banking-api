@@ -140,4 +140,28 @@ public class RestApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(errorDto, httpStatus);
     }
+
+    @ExceptionHandler(ConvertDtoToEntityException.class)
+    public ResponseEntity<?> handleConvertDtoToEntityException() {
+
+        final HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
+        final ErrorDto errorDto = ErrorDto.builder()
+                .httpStatusCode(httpStatus.value())
+                .message("The received data is invalid. Please send a valid request body.")
+                .build();
+
+        return new ResponseEntity<>(errorDto, httpStatus);
+    }
+
+    @ExceptionHandler(ConvertEntityToDtoException.class)
+    public ResponseEntity<?> handleConvertEntityToDtoException() {
+
+        final HttpStatus httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        final ErrorDto errorDto = ErrorDto.builder()
+                .httpStatusCode(httpStatus.value())
+                .message("Server error while converting data to Json.")
+                .build();
+
+        return new ResponseEntity<>(errorDto, httpStatus);
+    }
 }

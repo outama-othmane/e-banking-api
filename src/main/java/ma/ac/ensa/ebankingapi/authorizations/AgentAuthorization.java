@@ -1,6 +1,5 @@
 package ma.ac.ensa.ebankingapi.authorizations;
 
-import ma.ac.ensa.ebankingapi.enumerations.UserRole;
 import ma.ac.ensa.ebankingapi.models.Agent;
 import ma.ac.ensa.ebankingapi.models.User;
 import ma.ac.ensa.ebankingapi.utils.CurrentUser;

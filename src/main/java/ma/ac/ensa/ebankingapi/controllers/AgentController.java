@@ -36,6 +36,12 @@ public class AgentController {
         return agentService.getAllAgentsList();
     }
 
+    @GetMapping("{id}")
+    public AgentDto getAgent(@PathVariable("id") Agent agent) {
+        authorization.can("view", agent);
+        return agentService.getAgent(agent);
+    }
+
     @PutMapping("{id}")
     public void updateAgent(@PathVariable("id") Agent agent,
                                        @Valid @RequestBody UserDto userDto) {

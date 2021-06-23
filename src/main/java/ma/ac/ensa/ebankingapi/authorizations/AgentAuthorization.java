@@ -37,7 +37,7 @@ public class AgentAuthorization extends Authorization<Agent> {
 
     @Override
     public Boolean view(Agent agent) {
-        return isAdmin();
+        return update(agent);
     }
 
     @Override

@@ -129,4 +129,9 @@ public class AgentServiceImpl implements AgentService {
     public void deleteAgent(Agent agent) {
         agentRepository.delete(agent);
     }
+
+    @Override
+    public AgentDto getAgent(Agent agent) {
+        return AgentDto.fromEntity(agent);
+    }
 }

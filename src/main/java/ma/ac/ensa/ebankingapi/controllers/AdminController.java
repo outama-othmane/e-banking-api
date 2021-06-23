@@ -2,6 +2,7 @@ package ma.ac.ensa.ebankingapi.controllers;
 
 import ma.ac.ensa.ebankingapi.authorizations.AdminAuthorization;
 import ma.ac.ensa.ebankingapi.dtos.UserDto;
+import ma.ac.ensa.ebankingapi.dtos.AdminDto;
 import ma.ac.ensa.ebankingapi.models.Admin;
 import ma.ac.ensa.ebankingapi.services.AdminService;
 import ma.ac.ensa.ebankingapi.utils.Constants;
@@ -23,6 +24,12 @@ public class AdminController {
     public AdminController(AdminService adminService, AdminAuthorization authorization) {
         this.adminService = adminService;
         this.authorization = authorization;
+    }
+
+    @GetMapping("{id}")
+    public AdminDto getAdmin(@PathVariable("id") Admin admin) {
+        authorization.can("view", admin);
+        return adminService.getAdmin(admin);
     }
 
     @PutMapping("{id}")

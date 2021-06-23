@@ -2,6 +2,7 @@ package ma.ac.ensa.ebankingapi.services.impl;
 
 import com.google.common.base.Strings;
 import ma.ac.ensa.ebankingapi.dtos.AddressDto;
+import ma.ac.ensa.ebankingapi.dtos.AdminDto;
 import ma.ac.ensa.ebankingapi.dtos.UserDto;
 import ma.ac.ensa.ebankingapi.exception.InvalidFieldException;
 import ma.ac.ensa.ebankingapi.models.Address;
@@ -69,5 +70,10 @@ public class AdminServiceImpl implements AdminService {
         }
 
         userRepository.save(user);
+    }
+
+    @Override
+    public AdminDto getAdmin(Admin admin) {
+        return AdminDto.fromEntity(admin);
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@CrossOrigin(allowCredentials = "true",  origins = "http://localhost:4200")
+@CrossOrigin(allowCredentials = "true",  originPatterns = "*")
 @RestController
 @RequestMapping(Constants.APP_ROOT + "/admins")
 public class AdminController {

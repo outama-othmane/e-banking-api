@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@CrossOrigin(allowCredentials = "true",  origins = "http://localhost:4200")
+@CrossOrigin(allowCredentials = "true",  originPatterns = "*")
 @RestController
 @RequestMapping(Constants.APP_ROOT + "/appointments")
 public class AppointmentController {

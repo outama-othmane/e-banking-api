@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(allowCredentials = "true",  origins = "http://localhost:4200")
+@CrossOrigin(allowCredentials = "true",  originPatterns = "*")
 @RestController
 @RequestMapping(Constants.APP_ROOT + "/api/multiple_transfers")
 public class MultipleTransferController {
